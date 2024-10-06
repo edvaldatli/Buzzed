@@ -2,9 +2,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet } from "react-native";
 import { useGameContext } from "@/context/GameContext";
 import PrimaryText from "@/components/primaryText";
+import QRCode from "react-native-qrcode-svg";
+import { useSignalR } from "@/hooks/useSignalR";
+import { useEffect } from "react";
 
 export default function LobbyScreen() {
-  const { gameId, players, gameStatus } = useGameContext();
+  const { gameId, players, gameStatus, setPlayers } = useGameContext();
 
   if (!gameId) {
     return (
@@ -27,6 +30,7 @@ export default function LobbyScreen() {
         style={styles.background}
       />
       <View className="gap-y-20 px-16">
+        <QRCode value={gameId} size={200} />
         <PrimaryText tlw="text-4xl text-center">Game ID: {gameId}</PrimaryText>
         {players.map((player) => (
           <PrimaryText tlw="text-4xl text-center" key={player.id}>

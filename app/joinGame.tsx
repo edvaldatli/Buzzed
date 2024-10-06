@@ -6,22 +6,35 @@ import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { BarcodeScanningResult } from "expo-camera";
 import { useState } from "react";
+import { useSignalR } from "@/hooks/useSignalR";
+import { useGameContext } from "@/context/GameContext";
+import { useSignalRContext } from "@/context/SignalRContext";
 
-type NavigationProp = StackNavigationProp<RootStackParamList>;
+type JoinGameScreenProps = StackScreenProps<RootStackParamList, "joinGame">;
 
-export default function JoinGameScreen() {
+export default function JoinGameScreen({
+  route,
+  navigation,
+}: JoinGameScreenProps) {
+  const { name } = route.params;
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [scanData, setScanData] = useState<string | null>(null);
-  const navigation = useNavigation<NavigationProp>();
+  const { joinGame, connected, connection } = useSignalRContext();
+  const { gameId } = useGameContext();
 
   const handleScan = (data: BarcodeScanningResult) => {
     if (disabled) return;
-    setScanData(data.data);
-    setDisabled(true);
+    if (connected && connection) {
+      setDisabled(true);
+      setScanData(data.data);
+      joinGame(data.data, name).then(() => {
+        navigation.navigate("lobby");
+      });
+    }
   };
 
   if (!permission) {

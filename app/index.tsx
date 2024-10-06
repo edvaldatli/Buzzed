@@ -33,12 +33,16 @@ export default function Index() {
       <View className="flex flex-col justify-around h-48 w-full">
         <PositiveButton
           text="Join Game"
-          handlePress={() => navigation.navigate("joinGame")}
+          handlePress={() =>
+            navigation.navigate("enterName", { type: "joinGame" })
+          }
         />
         <Divider text="OR" />
         <PositiveButton
           text="Create Game"
-          handlePress={() => navigation.navigate("enterName")}
+          handlePress={() =>
+            navigation.navigate("enterName", { type: "createGame" })
+          }
         />
       </View>
     </View>

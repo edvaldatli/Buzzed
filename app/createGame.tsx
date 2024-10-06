@@ -6,6 +6,9 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
+import { useSignalR } from "@/hooks/useSignalR";
+import { MotiView } from "moti";
+import { useSignalRContext } from "@/context/SignalRContext";
 
 type CreateGameScreen = StackScreenProps<RootStackParamList, "createGame">;
 
@@ -14,49 +17,23 @@ export default function CreateGameScreen({
   navigation,
 }: CreateGameScreen) {
   const { name } = route.params;
-  const { gameId, setGameId, players, setPlayers, gameStatus, setGameStatus } =
+  const { gameId, players, gameStatus, setGameId, setPlayers, setGameStatus } =
     useGameContext();
 
-  useEffect(() => {
-    const connection = new HubConnectionBuilder()
-      .withUrl("https://25a2-157-157-36-239.ngrok-free.app/gameHub")
-      .configureLogging(LogLevel.Information)
-      .withAutomaticReconnect()
-      .build();
+  const { createGame } = useSignalRContext();
 
-    const startConnection = async () => {
+  useEffect(() => {
+    const createNewGame = async () => {
       try {
-        await connection.start();
-        console.log("Connected");
-        connection
-          .invoke("CreateGame", name)
-          .catch((err) => {
-            console.error("Create game failed: ", err);
-          })
-          .then(() => {
-            console.log("Create game success");
-            navigation.navigate("lobby");
-          });
-      } catch (err) {
-        console.error("Connection failed: ", err);
+        await createGame(name);
+        console.log("Game created successfully");
+        navigation.navigate("lobby");
+      } catch (error) {
+        console.log("Error creating game: ", error);
       }
     };
 
-    connection.on("GameCreated", (gameState) => {
-      console.log("Game state: ", gameState);
-
-      setGameId(gameState.id); // Update game ID
-      setPlayers(gameState.players); // Update player list
-      setGameStatus(gameState.currentState); // Update game status
-    });
-
-    startConnection();
-
-    return () => {
-      connection.stop().then(() => {
-        console.log("Disconnected");
-      });
-    };
+    createNewGame();
   }, []);
 
   useEffect(() => {
@@ -72,12 +49,19 @@ export default function CreateGameScreen({
         locations={[0.1, 0.5]}
         style={styles.background}
       />
-      <View className="gap-y-20 px-16">
-        <PrimaryText tlw="text-4xl text-center">
-          Hold tight, we are creating a game for you
-        </PrimaryText>
-        <ActivityIndicator size="large" color="#E33EB0" />
-      </View>
+      <MotiView
+        from={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", duration: 400 }}
+        exit={{ opacity: 0 }}
+      >
+        <View className="gap-y-20 px-16">
+          <PrimaryText tlw="text-4xl text-center">
+            Hold tight, we are creating a game for you
+          </PrimaryText>
+          <ActivityIndicator size="large" color="#E33EB0" />
+        </View>
+      </MotiView>
     </View>
   );
 }

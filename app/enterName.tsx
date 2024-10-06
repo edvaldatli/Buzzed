@@ -25,8 +25,7 @@ export default function EnterNameScreen({
     if (type === "createGame") {
       navigation.navigate("createGame", { name });
     } else {
-      console.log("create game");
-      console.log("name", name);
+      navigation.navigate("joinGame", { name });
     }
   };
 
