@@ -27,7 +27,22 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "assets/fonts/Rubik/Rubik-Black.ttf","assets/fonts/Rubik/Rubik-BlackItalic.ttf", "assets/fonts/Rubik/Rubik-Bold.ttf", "assets/fonts/Rubik/Rubik-BoldItalic.ttf", "assets/fonts/Rubik/Rubik-Italic.ttf", "assets/fonts/Rubik/Rubik-Light.ttf", "assets/fonts/Rubik/Rubik-LightItalic.ttf", "assets/fonts/Rubik/Rubik-Medium.ttf", "assets/fonts/Rubik/Rubik-MediumItalic.ttf", "assets/fonts/Rubik/Rubik-Regular.ttf", "assets/fonts/Rubik/Rubik-SemiBold.ttf", "assets/fonts/Rubik/Rubik-SemiBoldItalic.ttf", "assets/fonts/Rubik/Rubik-Light.ttf", "assets/fonts/Rubik/Rubik-LightItalic.ttf",
+            "assets/fonts/Signika/SignikaNegative-Bold.ttf", "assets/fonts/Signika/SignikaNegative-Light.ttf", "assets/fonts/Signika/SignikaNegative-Regular.ttf", "assets/fonts/Signika/SignikaNegative-SemiBold.ttf", "assets/fonts/Signika/SignikaNegative-Medium.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Buzzed to access your camera"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
