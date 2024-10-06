@@ -38,7 +38,7 @@ export default function Index() {
         <Divider text="OR" />
         <PositiveButton
           text="Create Game"
-          handlePress={() => navigation.navigate("createGame")}
+          handlePress={() => navigation.navigate("enterName")}
         />
       </View>
     </View>

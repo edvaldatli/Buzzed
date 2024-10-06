@@ -1,7 +1,7 @@
 import { Text, StyleSheet } from "react-native";
 
 type PositiveTextProps = {
-  children: string;
+  children: string | string[];
   tlw?: string;
 };
 
