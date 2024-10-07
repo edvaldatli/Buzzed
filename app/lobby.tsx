@@ -3,8 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { useGameContext } from "@/context/GameContext";
 import PrimaryText from "@/components/primaryText";
 import QRCode from "react-native-qrcode-svg";
-import { useSignalR } from "@/hooks/useSignalR";
-import { useEffect } from "react";
 import ErrorButton from "@/components/errorButton";
 import { useSignalRContext } from "@/context/SignalRContext";
 import { RootStackParamList } from "@/navigation/RootStackParams";

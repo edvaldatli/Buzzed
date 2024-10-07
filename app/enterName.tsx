@@ -9,7 +9,6 @@ import {
   View,
   StyleSheet,
   TextInput,
-  Text,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
