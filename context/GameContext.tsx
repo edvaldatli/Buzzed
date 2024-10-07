@@ -18,9 +18,7 @@ type GameContextType = {
   players: Array<Player>;
   gameStatus: string;
   setGameId: (id: string) => void;
-  setPlayers: (
-    players: Array<{ id: string; name: string; status: string }>
-  ) => void;
+  setPlayers: (players: Player[]) => void;
   setGameStatus: (status: string) => void;
   addPlayer: (player: Player) => void;
 };

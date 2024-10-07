@@ -1,3 +1,4 @@
+import ErrorButton from "@/components/errorButton";
 import PrimaryButton from "@/components/primaryButton";
 import PrimaryText from "@/components/primaryText";
 import { RootStackParamList } from "@/navigation/RootStackParams";
@@ -22,11 +23,7 @@ export default function EnterNameScreen({
   const { type } = route.params;
   const [name, setName] = useState<string>("");
   const handleNext = () => {
-    if (type === "createGame") {
-      navigation.navigate("createGame", { name });
-    } else {
-      navigation.navigate("joinGame", { name });
-    }
+    navigation.navigate("playerImage", { name, type });
   };
 
   return (
@@ -47,10 +44,17 @@ export default function EnterNameScreen({
         placeholder="Enter your name"
         placeholderTextColor={"#E33EB0"}
       ></TextInput>
-      <PrimaryButton
-        text="Next"
-        handlePress={() => handleNext()}
-      ></PrimaryButton>
+      <View className="w-full">
+        <PrimaryButton
+          text="Next"
+          handlePress={() => handleNext()}
+        ></PrimaryButton>
+        <View className="h-4"></View>
+        <ErrorButton
+          text="Cancel"
+          handlePress={() => navigation.goBack()}
+        ></ErrorButton>
+      </View>
     </KeyboardAvoidingView>
   );
 }

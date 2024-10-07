@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { useGameContext } from "@/context/GameContext"; // Import the context hook
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
-import { useSignalR } from "@/hooks/useSignalR";
 import { MotiView } from "moti";
 import { useSignalRContext } from "@/context/SignalRContext";
 

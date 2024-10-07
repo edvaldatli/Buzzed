@@ -8,7 +8,9 @@ type PositiveTextProps = {
 export default function PositiveText({ children, tlw }: PositiveTextProps) {
   return (
     <Text
-      className={`text-7xl font-extrabold text-primaryPink shadow ${tlw || ""}`}
+      className={`text-7xl font-extrabold text-primaryPink shadow-lg ${
+        tlw || ""
+      }`}
       style={{ ...styles.textStyle, fontFamily: "Rubik-BoldItalic" }}
     >
       {children}

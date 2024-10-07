@@ -5,13 +5,14 @@ import {
 } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { GameProvider } from "@/context/GameContext";
+import { SignalRProvider } from "@/context/SignalRContext";
 
 import Index from "@/app/index";
 import JoinGameScreen from "@/app/joinGame";
 import CreateGameScreen from "@/app/createGame";
 import EnterNameScreen from "@/app/enterName";
 import LobbyScreen from "@/app/lobby";
-import { SignalRProvider } from "@/context/SignalRContext";
+import PlayerImage from "@/app/playerImage";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -56,6 +57,11 @@ export default function RootLayout() {
                 animationEnabled: true, // Ensure animation still works
                 cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
               }}
+            />
+            <Stack.Screen
+              name="playerImage"
+              component={PlayerImage}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>

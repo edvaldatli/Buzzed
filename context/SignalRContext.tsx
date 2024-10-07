@@ -11,18 +11,21 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 import { useGameContext } from "./GameContext"; // Use GameContext to update the state
+import type { Player } from "@/types/GameTypes";
 
 type SignalRContextType = {
   connection: HubConnection | null;
   connected: boolean;
   createGame: (playerName: string) => Promise<void>;
   joinGame: (gameId: string, playerName: string) => Promise<void>;
+  leaveGame: () => Promise<void>;
 };
 
 const SignalRContext = createContext<SignalRContextType | undefined>(undefined);
 
 export const SignalRProvider = ({ children }: { children: ReactNode }) => {
-  const { setGameId, setPlayers, setGameStatus } = useGameContext();
+  const { gameId, players, setGameId, setPlayers, setGameStatus } =
+    useGameContext();
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [connected, setConnected] = useState(false);
 
@@ -61,6 +64,15 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
           setGameId(gameState.id);
           setPlayers(gameState.players);
           setGameStatus(gameState.currentState);
+        });
+
+        newConnection.on("PlayerLeft", (leavingPlayer: Player) => {
+          console.log("Player left: ", leavingPlayer);
+          setPlayers((prevPlayers) =>
+            prevPlayers.filter(
+              (player: Player) => player.id !== leavingPlayer.id
+            )
+          );
         });
       } catch (err) {
         console.error("SignalR connection failed: ", err);
@@ -104,9 +116,22 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const leaveGame = async () => {
+    if (connected && connection) {
+      try {
+        await connection.invoke("LeaveGame", gameId, connection.connectionId);
+      } catch (error) {
+        console.error("Error leaving game: ", error);
+        throw error; // Re-throw the error so it can be handled in the component if needed
+      }
+    } else {
+      console.warn("Cannot leave game, SignalR connection is not established.");
+    }
+  };
+
   return (
     <SignalRContext.Provider
-      value={{ connection, connected, createGame, joinGame }}
+      value={{ connection, connected, createGame, joinGame, leaveGame }}
     >
       {children}
     </SignalRContext.Provider>
