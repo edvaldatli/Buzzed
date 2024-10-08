@@ -21,8 +21,13 @@ export default function EnterNameScreen({
 }: EnterNameScreenProps) {
   const { type } = route.params;
   const [name, setName] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const handleNext = () => {
-    navigation.navigate("playerImage", { name, type });
+    if (name === "") {
+      setError("Lets put in that name");
+    } else {
+      navigation.navigate("playerImage", { name, type });
+    }
   };
 
   return (
@@ -37,10 +42,10 @@ export default function EnterNameScreen({
       />
       <PrimaryText tlw="text-center text-5xl">Who's Buzzin?</PrimaryText>
       <TextInput
-        className="bg-white w-full h-16 rounded-full text-center text-3xl font-bold text-black  shadow-md"
+        className="bg-white w-full h-16 rounded-full text-center text-3xl font-bold text-black shadow-md"
         value={name}
         onChangeText={(name) => setName(name)}
-        placeholder="Enter your name"
+        placeholder={error || "Enter your name"}
         placeholderTextColor={"#E33EB0"}
       ></TextInput>
       <View className="w-full">

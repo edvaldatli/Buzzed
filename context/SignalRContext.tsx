@@ -43,7 +43,9 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
   // Start the connection
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://6043-157-157-36-239.ngrok-free.app/gameHub")
+      .withUrl(
+        "https://buzzedwebservice-f6afe5epbnfrescz.northeurope-01.azurewebsites.net/gameHub"
+      )
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();

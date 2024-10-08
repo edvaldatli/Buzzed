@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import { useEffect, useState } from "react";
 import PrimaryButton from "@/components/primaryButton";
+import QrCode from "@/components/qrCode";
 
 type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
 
@@ -55,10 +56,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
         locations={[0.1, 0.5]}
         style={styles.background}
       />
-      <View className="flex flex-row items-center p-2 bg-white rounded-xl">
-        <PrimaryText tlw="text-2xl mr-2">Join Code</PrimaryText>
-        <QRCode value={gameId} size={50} />
-      </View>
+      <QrCode data={gameId} />
       <View className="flex w-full h-full pt-5">
         <PrimaryText tlw="text-6xl text-center">The crew</PrimaryText>
         <View className="h-2" />
@@ -66,7 +64,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           {players.map((player) => (
             <>
               <LobbyAvatar key={player.id} player={player} />
-              <View className="h-2" key={player.id + player.name} />
+              <View className="h-2" key={`${player.id}${player.name}id}`} />
             </>
           ))}
         </View>

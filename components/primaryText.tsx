@@ -5,7 +5,7 @@ type PositiveTextProps = {
   tlw?: string;
 };
 
-export default function PositiveText({ children, tlw }: PositiveTextProps) {
+export default function PrimaryText({ children, tlw }: PositiveTextProps) {
   return (
     <Text
       className={`text-7xl font-extrabold text-primaryPink shadow-lg ${
