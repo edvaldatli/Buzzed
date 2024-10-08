@@ -5,9 +5,10 @@ import { RootStackParamList } from "@/navigation/RootStackParams";
 import { StackScreenProps } from "@react-navigation/stack";
 import { CameraView } from "expo-camera";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useRef } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import useBlobStorage from "@/hooks/useBlobStorage";
+import ErrorButton from "@/components/errorButton";
+import { useIsFocused } from "@react-navigation/native";
 
 type PlayerImageScreenProps = StackScreenProps<
   RootStackParamList,
@@ -18,24 +19,35 @@ export default function PlayerImage({
   route,
   navigation,
 }: PlayerImageScreenProps) {
-  const { uploadImage } = useBlobStorage();
   const { permission, requestPermission } = useCamera();
+  const [cameraActive, setCameraActive] = useState<boolean>(true);
+  const isFocused = useIsFocused();
   const { name, type } = route.params;
   const cameraRef = useRef<CameraView>(null);
+  const [pictureSizes, setPictureSizes] = useState<string[] | undefined>(
+    undefined
+  );
 
   const handleNext = async () => {
-    const photo = await cameraRef.current?.takePictureAsync();
-    const res = await uploadImage(photo!, name);
-    if (res) {
+    const photo = await cameraRef.current?.takePictureAsync({
+      base64: true,
+      quality: 0.1,
+    });
+    if (photo?.base64) {
+      const imageBase64 = photo.base64;
+
       if (type === "createGame") {
-        navigation.navigate("createGame", { name });
+        navigation.navigate("createGame", { name, image: imageBase64 });
       } else {
-        navigation.navigate("joinGame", { name });
+        navigation.navigate("joinGame", { name, image: imageBase64 });
       }
     } else {
-      // Make client aware of the error
       console.error("Error uploading image");
     }
+  };
+
+  const getPictureSizes = async () => {
+    setPictureSizes(await cameraRef.current?.getAvailablePictureSizesAsync());
   };
 
   useEffect(() => {
@@ -43,6 +55,16 @@ export default function PlayerImage({
       requestPermission();
     }
   }, []);
+
+  const cameraCleanup = async () => {
+    if (isFocused) {
+      cameraRef.current?.componentDidMount;
+    } else if (cameraRef.current && !isFocused) {
+      setCameraActive(false);
+      cameraRef.current.stopRecording();
+      cameraRef.current.componentWillUnmount;
+    }
+  };
 
   if (!permission) {
     return (
@@ -70,8 +92,29 @@ export default function PlayerImage({
       />
       <View className="flex justify-around items-center w-full h-full p-12">
         <PrimaryText tlw="text-center text-7xl">Snap that selfie</PrimaryText>
-        <CameraView style={styles.camera} facing="front" ref={cameraRef} />
-        <PositiveButton text="Cheese!" handlePress={() => handleNext()} />
+        {cameraActive && (
+          <CameraView
+            style={styles.camera}
+            facing="front"
+            ref={cameraRef}
+            videoQuality="480p"
+            pictureSize="Low"
+            active={cameraActive}
+            animateShutter={true}
+            mode="picture"
+          />
+        )}
+        <View className="flex flex-col justify-end w-full h-20">
+          <PositiveButton text="Cheese!" handlePress={() => handleNext()} />
+          <View className="h-4"></View>
+          <ErrorButton
+            text="Cancel"
+            handlePress={async () => {
+              await cameraCleanup();
+              navigation.goBack();
+            }}
+          ></ErrorButton>
+        </View>
       </View>
     </>
   );

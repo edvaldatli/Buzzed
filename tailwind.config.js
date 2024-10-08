@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         primaryPink: "#FF80C6",
+        primaryOrange: "#FD841F",
         error: "#FE3639",
       },
     },

@@ -14,7 +14,7 @@ export default function CreateGameScreen({
   route,
   navigation,
 }: CreateGameScreen) {
-  const { name } = route.params;
+  const { name, image } = route.params;
   const { gameId, players, gameStatus, setGameId, setPlayers, setGameStatus } =
     useGameContext();
 
@@ -23,7 +23,13 @@ export default function CreateGameScreen({
   useEffect(() => {
     const createNewGame = async () => {
       try {
-        await createGame(name);
+        if (!image) {
+          throw new Error("Image is missing");
+        }
+        const message = JSON.stringify({ name, image });
+        const messageSize = new Blob([message]).size;
+        console.log("Message size: ", messageSize);
+        await createGame(name, image);
         console.log("Game created successfully");
         navigation.navigate("lobby");
       } catch (error) {

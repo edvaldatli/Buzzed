@@ -19,7 +19,7 @@ export default function JoinGameScreen({
   route,
   navigation,
 }: JoinGameScreenProps) {
-  const { name } = route.params;
+  const { name, image } = route.params;
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [scanData, setScanData] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export default function JoinGameScreen({
     if (connected && connection) {
       setDisabled(true);
       setScanData(data.data);
-      joinGame(data.data, name).then(() => {
+      joinGame(data.data, name, image).then(() => {
         navigation.navigate("lobby");
       });
     }

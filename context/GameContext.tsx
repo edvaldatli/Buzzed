@@ -1,40 +1,24 @@
-import { useSignalR } from "@/hooks/useSignalR";
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useEffect,
-} from "react";
-
-type Player = {
-  id: string;
-  name: string;
-  status: string;
-};
+import React, { createContext, useState, useContext, ReactNode } from "react";
+import { Player } from "@/types/GameTypes";
 
 type GameContextType = {
   gameId: string | null;
   players: Array<Player>;
   gameStatus: string;
+  host: Player | undefined;
   setGameId: (id: string) => void;
-  setPlayers: (players: Player[]) => void;
+  setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
   setGameStatus: (status: string) => void;
-  addPlayer: (player: Player) => void;
+  setHost: (player: Player) => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [gameId, setGameId] = useState<string | null>(null);
-  const [players, setPlayers] = useState<
-    Array<{ id: string; name: string; status: string }>
-  >([]);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [gameStatus, setGameStatus] = useState<string>("");
-
-  const addPlayer = (player: Player) => {
-    setPlayers((prevPlayers) => [...prevPlayers, player]); // Add new player to the list
-  };
+  const [host, setHost] = useState<Player>();
 
   return (
     <GameContext.Provider
@@ -42,10 +26,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         gameId,
         players,
         gameStatus,
+        host,
         setGameId,
         setPlayers,
         setGameStatus,
-        addPlayer,
+        setHost,
       }}
     >
       {children}

@@ -16,25 +16,34 @@ import type { Player } from "@/types/GameTypes";
 type SignalRContextType = {
   connection: HubConnection | null;
   connected: boolean;
-  createGame: (playerName: string) => Promise<void>;
-  joinGame: (gameId: string, playerName: string) => Promise<void>;
+  createGame: (playerName: string, image: string) => Promise<void>;
+  joinGame: (
+    gameId: string,
+    playerName: string,
+    image: string
+  ) => Promise<void>;
   leaveGame: () => Promise<void>;
 };
 
 const SignalRContext = createContext<SignalRContextType | undefined>(undefined);
 
 export const SignalRProvider = ({ children }: { children: ReactNode }) => {
-  const { gameId, players, setGameId, setPlayers, setGameStatus } =
-    useGameContext();
+  const {
+    gameId,
+    players,
+    host,
+    setGameId,
+    setPlayers,
+    setGameStatus,
+    setHost,
+  } = useGameContext();
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [connected, setConnected] = useState(false);
 
   // Start the connection
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl(
-        "https://buzzedwebservice-f6afe5epbnfrescz.northeurope-01.azurewebsites.net/gameHub"
-      )
+      .withUrl("https://6043-157-157-36-239.ngrok-free.app/gameHub")
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();
@@ -53,6 +62,7 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
           setGameId(gameState.id);
           setPlayers(gameState.players);
           setGameStatus(gameState.currentState);
+          setHost(gameState.host);
         });
 
         // Listen for PlayerJoined event and update GameContext
@@ -66,15 +76,21 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
           setGameId(gameState.id);
           setPlayers(gameState.players);
           setGameStatus(gameState.currentState);
+          setHost(gameState.host);
         });
 
         newConnection.on("PlayerLeft", (leavingPlayer: Player) => {
           console.log("Player left: ", leavingPlayer);
-          setPlayers((prevPlayers) =>
+          setPlayers((prevPlayers: Player[]) =>
             prevPlayers.filter(
               (player: Player) => player.id !== leavingPlayer.id
             )
           );
+        });
+
+        newConnection.on("NewHost", (newHost: Player) => {
+          console.log("New host: ", newHost);
+          setHost(newHost);
         });
       } catch (err) {
         console.error("SignalR connection failed: ", err);
@@ -89,10 +105,10 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Create game function
-  const createGame = async (playerName: string) => {
-    if (connected && connection) {
+  const createGame = async (playerName: string, image: string) => {
+    if (connected && connection && image) {
       try {
-        await connection.invoke("CreateGame", playerName);
+        await connection.invoke("CreateGame", playerName, image);
       } catch (error) {
         console.error("Error creating game: ", error);
         throw error; // Re-throw the error so it can be handled in the component if needed
@@ -105,10 +121,14 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Join game function
-  const joinGame = async (gameId: string, playerName: string) => {
+  const joinGame = async (
+    gameId: string,
+    playerName: string,
+    image: string
+  ) => {
     if (connected && connection) {
       try {
-        await connection.invoke("JoinGame", gameId, playerName);
+        await connection.invoke("JoinGame", gameId, playerName, image);
       } catch (error) {
         console.error("Error joining game: ", error);
         throw error; // Re-throw the error so it can be handled in the component if needed

@@ -25,17 +25,17 @@ export default function RootLayout() {
             <Stack.Screen
               name="index"
               component={Index}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
             <Stack.Screen
               name="joinGame"
               component={JoinGameScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
             <Stack.Screen
               name="createGame"
               component={CreateGameScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
             <Stack.Screen
               name="enterName"
@@ -43,9 +43,7 @@ export default function RootLayout() {
               initialParams={{ type: "createGame" }}
               options={{
                 headerShown: false,
-                gestureEnabled: false, // Disable swipe gesture
-                animationEnabled: true, // Ensure animation still works
-                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+                gestureEnabled: false,
               }}
             />
             <Stack.Screen
@@ -53,15 +51,13 @@ export default function RootLayout() {
               component={LobbyScreen}
               options={{
                 headerShown: false,
-                gestureEnabled: false, // Disable swipe gesture
-                animationEnabled: true, // Ensure animation still works
-                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+                gestureEnabled: false,
               }}
             />
             <Stack.Screen
               name="playerImage"
               component={PlayerImage}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>
