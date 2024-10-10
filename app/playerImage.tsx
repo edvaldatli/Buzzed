@@ -24,30 +24,35 @@ export default function PlayerImage({
   const isFocused = useIsFocused();
   const { name, type } = route.params;
   const cameraRef = useRef<CameraView>(null);
-  const [pictureSizes, setPictureSizes] = useState<string[] | undefined>(
-    undefined
-  );
+
+  useEffect(() => {
+    console.log(name, type);
+  }, []);
 
   const handleNext = async () => {
-    const photo = await cameraRef.current?.takePictureAsync({
-      base64: true,
-      quality: 0.1,
-    });
-    if (photo?.base64) {
-      const imageBase64 = photo.base64;
+    if (permission) {
+      console.log("Taking picture");
+      const photo = await cameraRef.current?.takePictureAsync({
+        base64: true,
+        quality: 0.1,
+      });
+      console.log(photo);
+      if (photo?.base64) {
+        const imageBase64 = photo.base64;
+        console.log("Image captured");
+        console.log(imageBase64);
 
-      if (type === "createGame") {
-        navigation.navigate("createGame", { name, image: imageBase64 });
+        if (type === "createGame") {
+          navigation.navigate("createGame", { name, image: imageBase64 });
+        } else {
+          navigation.navigate("joinGame", { name, image: imageBase64 });
+        }
       } else {
-        navigation.navigate("joinGame", { name, image: imageBase64 });
+        console.error("Error uploading image");
       }
     } else {
-      console.error("Error uploading image");
+      console.error("Camera permission not granted");
     }
-  };
-
-  const getPictureSizes = async () => {
-    setPictureSizes(await cameraRef.current?.getAvailablePictureSizesAsync());
   };
 
   useEffect(() => {
@@ -55,16 +60,6 @@ export default function PlayerImage({
       requestPermission();
     }
   }, []);
-
-  const cameraCleanup = async () => {
-    if (isFocused) {
-      cameraRef.current?.componentDidMount;
-    } else if (cameraRef.current && !isFocused) {
-      setCameraActive(false);
-      cameraRef.current.stopRecording();
-      cameraRef.current.componentWillUnmount;
-    }
-  };
 
   if (!permission) {
     return (
@@ -101,7 +96,7 @@ export default function PlayerImage({
             pictureSize="Low"
             active={cameraActive}
             animateShutter={true}
-            mode="picture"
+            onCameraReady={() => console.log("Camera ready")}
           />
         )}
         <View className="flex flex-col justify-end w-full h-20">
@@ -110,7 +105,6 @@ export default function PlayerImage({
           <ErrorButton
             text="Cancel"
             handlePress={async () => {
-              await cameraCleanup();
               navigation.goBack();
             }}
           ></ErrorButton>
