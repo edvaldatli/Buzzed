@@ -62,10 +62,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
         <View className="h-2" />
         <View className="flex flex-col justify-start items-start h-1/2">
           {players.map((player) => (
-            <>
-              <LobbyAvatar key={player.id} player={player} />
-              <View className="h-2" key={`${player.id}${player.name}id}`} />
-            </>
+            <View key={player.id} className="flex flex-col items-start">
+              <LobbyAvatar player={player} />
+              <View className="h-2" />
+            </View>
           ))}
         </View>
         <View className="flex flex-col justify-end h-1/3">
