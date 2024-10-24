@@ -1,18 +1,16 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackScreenProps } from "@react-navigation/stack";
-
+import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
+
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
 import QrCode from "@/components/qrCode";
-
-import { RootStackParamList } from "@/navigation/RootStackParams";
-import { useNavigation } from "expo-router";
 
 type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
 
@@ -20,7 +18,6 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
   const [userId, setUserId] = useState<string>("");
 
-  const nav = useNavigation();
   const setNavigation = useColyseusStore((state) => state.setNavigation);
 
   useEffect(() => {
@@ -30,12 +27,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   useEffect(() => {
     if (currentRoom) {
       setUserId(currentRoom.sessionId);
+    } else if (!currentRoom) {
+      navigation.navigate("index");
     }
   }, [currentRoom]);
-
-  useEffect(() => {
-    console.log("LobbyScreen players:", players);
-  }, [players]);
 
   const handleLeave = () => {
     disconnect();
@@ -56,6 +51,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           style={styles.background}
         />
         <PrimaryText tlw="text-4xl text-center">Loading...</PrimaryText>
+        <ActivityIndicator />
       </View>
     );
   }

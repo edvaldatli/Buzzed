@@ -7,47 +7,12 @@ import { MotiView } from "moti";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { useCustomFonts } from "@/hooks/useCustomFonts";
-import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useState } from "react";
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 export default function Index() {
   const navigation = useNavigation<NavigationProp>();
-  const fontsLoaded = useCustomFonts();
-  const [appIsReady, setAppIsReady] = useState(false);
 
-  SplashScreen.preventAutoHideAsync();
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        if (fontsLoaded) {
-          setAppIsReady(true);
-        }
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        if (fontsLoaded) {
-          setAppIsReady(true);
-        }
-      }
-    }
-
-    prepare();
-  }, [fontsLoaded]);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  // Show a blank screen while app is preparing
-  if (!appIsReady) {
-    return null;
-  }
   return (
     <View className="flex justify-around items-center h-full p-12">
       <LinearGradient
@@ -64,19 +29,32 @@ export default function Index() {
       </MotiView>
 
       <View className="flex flex-col justify-around h-48 w-full">
-        <PositiveButton
-          text="Join Game"
-          handlePress={() =>
-            navigation.navigate("enterName", { type: "joinGame" })
-          }
-        />
-        <Divider text="OR" />
-        <PositiveButton
-          text="Create Game"
-          handlePress={() =>
-            navigation.navigate("enterName", { type: "createGame" })
-          }
-        />
+        <MotiView
+          from={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ type: "spring", duration: 400 }}
+          className="flex gap-y-4"
+        >
+          <View>
+            <PositiveButton
+              text="Join Game"
+              handlePress={() =>
+                navigation.navigate("enterName", { type: "joinGame" })
+              }
+            />
+          </View>
+          <View>
+            <Divider text="OR" />
+          </View>
+          <View>
+            <PositiveButton
+              text="Create Game"
+              handlePress={() =>
+                navigation.navigate("enterName", { type: "createGame" })
+              }
+            />
+          </View>
+        </MotiView>
       </View>
     </View>
   );

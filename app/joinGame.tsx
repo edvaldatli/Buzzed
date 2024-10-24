@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import useCamera from "@/hooks/useCamera";
 import QRCodeScanner from "@/components/qrCodeScanner";
@@ -9,6 +9,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { BarcodeScanningResult } from "expo-camera";
 import { useEffect, useState } from "react";
 import { useColyseusStore } from "@/context/ColyseusContext";
+import { MotiView } from "moti";
 
 type JoinGameScreenProps = StackScreenProps<RootStackParamList, "joinGame">;
 
@@ -19,7 +20,7 @@ export default function JoinGameScreen({
   const { name, image } = route.params;
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
-  const [scanData, setScanData] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { joinRoom, currentRoom, setNavigation } = useColyseusStore();
 
   useEffect(() => {
@@ -29,10 +30,11 @@ export default function JoinGameScreen({
   const handleScan = async (data: BarcodeScanningResult) => {
     if (disabled) return;
     setDisabled(true);
-    setScanData(data.data);
+    setLoading(true);
     try {
       joinRoom(data.data, name, image);
     } catch (e) {
+      setLoading(false);
       console.log(e);
       setDisabled(false);
     }
@@ -40,33 +42,50 @@ export default function JoinGameScreen({
     console.log("Current room in joinGame", currentRoom);
   };
 
-  useEffect(() => {
-    if (currentRoom) {
-      console.log("Navigating to the lobby...");
-      navigation.navigate("lobby");
-    }
-  }, [currentRoom]); // Trigger navigation when currentRoom is updated
-
   if (!permission) {
     requestPermission();
   }
 
+  if (loading) {
+    return (
+      <View className="flex h-full justify-center items-center p-12">
+        <LinearGradient
+          colors={["#E33EB0", "#FD841F"]}
+          locations={[0.1, 0.5]}
+          style={styles.background}
+        />
+        <PrimaryText tlw="text-3xl text-center">Loading...</PrimaryText>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
-    <View className="flex h-full justify-around items-center p-12">
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
-      <PrimaryText tlw="text-3xl text-center">
-        Scan your friend's QR code
-      </PrimaryText>
-      <QRCodeScanner onScan={(data) => handleScan(data)} disabled={disabled} />
-      <ErrorButton
-        text="Cancel"
-        handlePress={() => navigation.navigate("index")}
-      />
-    </View>
+    <MotiView
+      from={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: "spring", duration: 400 }}
+      exit={{ opacity: 0 }}
+    >
+      <View className="flex h-full justify-around items-center p-12">
+        <LinearGradient
+          colors={["#E33EB0", "#FD841F"]}
+          locations={[0.1, 0.5]}
+          style={styles.background}
+        />
+        <PrimaryText tlw="text-3xl text-center">
+          Scan your friend's QR code
+        </PrimaryText>
+        <QRCodeScanner
+          onScan={(data) => handleScan(data)}
+          disabled={disabled}
+        />
+        <ErrorButton
+          text="Cancel"
+          handlePress={() => navigation.navigate("index")}
+        />
+      </View>
+    </MotiView>
   );
 }
 

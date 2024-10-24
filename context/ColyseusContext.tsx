@@ -67,7 +67,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://172.20.10.2:2567");
     set({ client });
 
     try {
@@ -87,6 +87,9 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
     } catch (error) {
       console.error("Error joining room:", error);
+      const { navigation } = get();
+
+      navigation?.navigate("error", { message: "Room could not be found" });
     }
   },
 

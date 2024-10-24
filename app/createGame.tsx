@@ -39,14 +39,6 @@ export default function CreateGameScreen({
     createNewGame();
   }, []);
 
-  // Debugging to check if connected and room data is available
-  useEffect(() => {
-    if (connected && currentRoom) {
-      console.log("Room ID: ", currentRoom.roomId);
-      console.log("Players: ", currentRoom.state.players);
-    }
-  }, [connected, currentRoom]);
-
   return (
     <View className="flex h-full w-full justify-center items-center">
       <LinearGradient

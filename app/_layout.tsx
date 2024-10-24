@@ -9,21 +9,11 @@ import EnterNameScreen from "@/app/enterName";
 import LobbyScreen from "@/app/lobby";
 import PlayerImage from "@/app/playerImage";
 import IntroScreen from "@/app/intro";
-import { useEffect, useState } from "react";
+import ErrorScreen from "@/app/error";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function RootLayout() {
-  const [isNavReady, setNavReady] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setNavReady(true);
-    }, 100); // Wait for 100ms to ensure navigation is ready
-
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
@@ -67,6 +57,11 @@ export default function RootLayout() {
         <Stack.Screen
           name="intro"
           component={IntroScreen}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="error"
+          component={ErrorScreen}
           options={{ headerShown: false, gestureEnabled: false }}
         />
       </Stack.Navigator>
