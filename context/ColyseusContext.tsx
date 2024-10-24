@@ -39,7 +39,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://172.20.10.2:2567");
     set({ client });
 
     try {
@@ -105,7 +105,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     console.log("Navigating to:", gameState);
 
     if (gameState === "lobby") {
-      navigation.navigate("LobbyScreen");
+      navigation.navigate("lobby");
     } else if (gameState === "intro") {
       navigation.navigate("intro");
     } else if (gameState === "round_in_progress") {

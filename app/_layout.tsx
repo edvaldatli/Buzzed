@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { GameProvider } from "@/context/GameContext";
 
 import Index from "@/app/index";
 import JoinGameScreen from "@/app/joinGame";
@@ -26,53 +25,51 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <GameProvider>
-      <NavigationContainer independent={true}>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="index"
-            component={Index}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="joinGame"
-            component={JoinGameScreen}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="createGame"
-            component={CreateGameScreen}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="enterName"
-            component={EnterNameScreen}
-            initialParams={{ type: "createGame" }}
-            options={{
-              headerShown: false,
-              gestureEnabled: false,
-            }}
-          />
-          <Stack.Screen
-            name="lobby"
-            component={LobbyScreen}
-            options={{
-              headerShown: false,
-              gestureEnabled: false,
-            }}
-          />
-          <Stack.Screen
-            name="playerImage"
-            component={PlayerImage}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="intro"
-            component={IntroScreen}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </GameProvider>
+    <NavigationContainer independent={true}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="index"
+          component={Index}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="joinGame"
+          component={JoinGameScreen}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="createGame"
+          component={CreateGameScreen}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="enterName"
+          component={EnterNameScreen}
+          initialParams={{ type: "createGame" }}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
+          name="lobby"
+          component={LobbyScreen}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
+          name="playerImage"
+          component={PlayerImage}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="intro"
+          component={IntroScreen}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

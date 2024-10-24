@@ -20,7 +20,11 @@ export default function JoinGameScreen({
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [scanData, setScanData] = useState<string | null>(null);
-  const { joinRoom, currentRoom } = useColyseusStore();
+  const { joinRoom, currentRoom, setNavigation } = useColyseusStore();
+
+  useEffect(() => {
+    setNavigation(navigation);
+  }, [navigation]);
 
   const handleScan = async (data: BarcodeScanningResult) => {
     if (disabled) return;
@@ -34,10 +38,6 @@ export default function JoinGameScreen({
     }
 
     console.log("Current room in joinGame", currentRoom);
-
-    if (currentRoom) {
-      navigation.navigate("lobby");
-    }
   };
 
   useEffect(() => {

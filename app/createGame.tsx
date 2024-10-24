@@ -14,7 +14,12 @@ export default function CreateGameScreen({
   navigation,
 }: CreateGameScreen) {
   const { name, image } = route.params;
-  const { createRoom, currentRoom, connected } = useColyseusStore();
+  const { createRoom, currentRoom, connected, setNavigation } =
+    useColyseusStore();
+
+  useEffect(() => {
+    setNavigation(navigation);
+  }, [navigation]);
 
   useEffect(() => {
     const createNewGame = async () => {
@@ -26,9 +31,6 @@ export default function CreateGameScreen({
         createRoom(name, image);
 
         console.log("Game room created successfully");
-
-        // Navigate to lobby once the room is created
-        navigation.navigate("lobby");
       } catch (error) {
         console.log("Error creating game: ", error);
       }
