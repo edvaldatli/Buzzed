@@ -5,10 +5,9 @@ import { RootStackParamList } from "@/navigation/RootStackParams";
 import { StackScreenProps } from "@react-navigation/stack";
 import { CameraView } from "expo-camera";
 import { LinearGradient } from "expo-linear-gradient";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ErrorButton from "@/components/errorButton";
-import { useIsFocused } from "@react-navigation/native";
 
 type PlayerImageScreenProps = StackScreenProps<
   RootStackParamList,
@@ -20,8 +19,7 @@ export default function PlayerImage({
   navigation,
 }: PlayerImageScreenProps) {
   const { permission, requestPermission } = useCamera();
-  const [cameraActive, setCameraActive] = useState<boolean>(true);
-  const isFocused = useIsFocused();
+  const [cameraActive] = useState<boolean>(true);
   const { name, type } = route.params;
   const cameraRef = useRef<CameraView>(null);
 
@@ -31,16 +29,13 @@ export default function PlayerImage({
 
   const handleNext = async () => {
     if (permission) {
-      console.log("Taking picture");
       const photo = await cameraRef.current?.takePictureAsync({
         base64: true,
         quality: 0.1,
       });
-      console.log(photo);
       if (photo?.base64) {
         const imageBase64 = photo.base64;
         console.log("Image captured");
-        console.log(imageBase64);
 
         if (type === "createGame") {
           navigation.navigate("createGame", { name, image: imageBase64 });
@@ -92,10 +87,6 @@ export default function PlayerImage({
             style={styles.camera}
             facing="front"
             ref={cameraRef}
-            videoQuality="480p"
-            pictureSize="Low"
-            active={cameraActive}
-            animateShutter={true}
             onCameraReady={() => console.log("Camera ready")}
           />
         )}

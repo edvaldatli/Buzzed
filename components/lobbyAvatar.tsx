@@ -15,7 +15,11 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
   return (
     <View className="flex flex-row items-center">
       <Image
-        source={player.imageUrl}
+        source={
+          player.avatar == "default-avatar-url"
+            ? require("../assets/images/avatar-placeholder.png")
+            : player.avatar
+        }
         className="w-14 h-14 rounded-full border-green-500 border-4"
       />
       <View className="w-3" />

@@ -40,10 +40,11 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [connected, setConnected] = useState(false);
 
-  // Start the connection
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://43d0-157-157-36-239.ngrok-free.app/gameHub")
+      .withUrl(
+        "https://buzzedwebservice-f6afe5epbnfrescz.northeurope-01.azurewebsites.net/gameHub"
+      )
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();
@@ -56,7 +57,6 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
         setConnected(true);
         console.log("SignalR connected");
 
-        // Listen for GameCreated event and update GameContext
         newConnection.on("GameCreated", (gameState) => {
           console.log("Game created: ", gameState);
           setGameId(gameState.id);
@@ -65,7 +65,6 @@ export const SignalRProvider = ({ children }: { children: ReactNode }) => {
           setHost(gameState.host);
         });
 
-        // Listen for PlayerJoined event and update GameContext
         newConnection.on("PlayerJoined", (player) => {
           console.log("Player joined: ", player);
           setPlayers((prevPlayers) => [...prevPlayers, player]);

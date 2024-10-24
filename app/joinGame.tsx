@@ -4,14 +4,11 @@ import useCamera from "@/hooks/useCamera";
 import QRCodeScanner from "@/components/qrCodeScanner";
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
-import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import { BarcodeScanningResult } from "expo-camera";
-import { useState } from "react";
-import { useSignalR } from "@/hooks/useSignalR";
-import { useGameContext } from "@/context/GameContext";
-import { useSignalRContext } from "@/context/SignalRContext";
+import { useEffect, useState } from "react";
+import { useColyseusStore } from "@/context/ColyseusContext";
 
 type JoinGameScreenProps = StackScreenProps<RootStackParamList, "joinGame">;
 
@@ -23,19 +20,32 @@ export default function JoinGameScreen({
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [scanData, setScanData] = useState<string | null>(null);
-  const { joinGame, connected, connection } = useSignalRContext();
-  const { gameId } = useGameContext();
+  const { joinRoom, currentRoom } = useColyseusStore();
 
-  const handleScan = (data: BarcodeScanningResult) => {
+  const handleScan = async (data: BarcodeScanningResult) => {
     if (disabled) return;
-    if (connected && connection) {
-      setDisabled(true);
-      setScanData(data.data);
-      joinGame(data.data, name, image).then(() => {
-        navigation.navigate("lobby");
-      });
+    setDisabled(true);
+    setScanData(data.data);
+    try {
+      joinRoom(data.data, name, image);
+    } catch (e) {
+      console.log(e);
+      setDisabled(false);
+    }
+
+    console.log("Current room in joinGame", currentRoom);
+
+    if (currentRoom) {
+      navigation.navigate("lobby");
     }
   };
+
+  useEffect(() => {
+    if (currentRoom) {
+      console.log("Navigating to the lobby...");
+      navigation.navigate("lobby");
+    }
+  }, [currentRoom]); // Trigger navigation when currentRoom is updated
 
   if (!permission) {
     requestPermission();

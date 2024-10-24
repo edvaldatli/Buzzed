@@ -7,4 +7,5 @@ export type RootStackParamList = {
     enterName: { type: "createGame" | "joinGame" };
     lobby: undefined;
     playerImage: { type: "createGame" | "joinGame"; name: string };
+    intro: undefined;
 };

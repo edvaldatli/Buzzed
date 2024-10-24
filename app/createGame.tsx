@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { useGameContext } from "@/context/GameContext"; // Import the context hook
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
 import { MotiView } from "moti";
-import { useSignalRContext } from "@/context/SignalRContext";
+import { useColyseusStore } from "@/context/ColyseusContext"; // Import the Colyseus context
 
 type CreateGameScreen = StackScreenProps<RootStackParamList, "createGame">;
 
@@ -15,10 +14,7 @@ export default function CreateGameScreen({
   navigation,
 }: CreateGameScreen) {
   const { name, image } = route.params;
-  const { gameId, players, gameStatus, setGameId, setPlayers, setGameStatus } =
-    useGameContext();
-
-  const { createGame } = useSignalRContext();
+  const { createRoom, currentRoom, connected } = useColyseusStore();
 
   useEffect(() => {
     const createNewGame = async () => {
@@ -26,11 +22,12 @@ export default function CreateGameScreen({
         if (!image) {
           throw new Error("Image is missing");
         }
-        const message = JSON.stringify({ name, image });
-        const messageSize = new Blob([message]).size;
-        console.log("Message size: ", messageSize);
-        await createGame(name, image);
-        console.log("Game created successfully");
+
+        createRoom(name, image);
+
+        console.log("Game room created successfully");
+
+        // Navigate to lobby once the room is created
         navigation.navigate("lobby");
       } catch (error) {
         console.log("Error creating game: ", error);
@@ -40,11 +37,13 @@ export default function CreateGameScreen({
     createNewGame();
   }, []);
 
+  // Debugging to check if connected and room data is available
   useEffect(() => {
-    console.log("Game ID: ", gameId);
-    console.log("Players: ", players);
-    console.log("Game Status: ", gameStatus);
-  }, [gameId, players, gameStatus]);
+    if (connected && currentRoom) {
+      console.log("Room ID: ", currentRoom.roomId);
+      console.log("Players: ", currentRoom.state.players);
+    }
+  }, [connected, currentRoom]);
 
   return (
     <View className="flex h-full w-full justify-center items-center">
