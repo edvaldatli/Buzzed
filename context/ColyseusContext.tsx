@@ -39,7 +39,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client("ws://172.20.10.2:2567");
+    const client = new Colyseus.Client("ws://192.168.50.230:2567");
     set({ client });
 
     try {
@@ -67,7 +67,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client("ws://172.20.10.2:2567");
+    const client = new Colyseus.Client("ws://192.168.50.230:2567");
     set({ client });
 
     try {
@@ -110,9 +110,15 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     if (gameState === "lobby") {
       navigation.navigate("lobby");
     } else if (gameState === "intro") {
-      navigation.navigate("intro");
+      navigation.navigate("WhoIsMoreLikelyStack", { screen: "intro" });
     } else if (gameState === "round_in_progress") {
-      navigation.navigate("lobby");
+      navigation.navigate("WhoIsMoreLikelyStack", { screen: "voting" });
+    } else if (gameState === "displaying_results") {
+      navigation.navigate("WhoIsMoreLikelyStack", { screen: "votingResult" });
+    } else if (gameState === "displaying_question") {
+      navigation.navigate("WhoIsMoreLikelyStack", { screen: "question" });
+    } else if (gameState === "end_game_screen") {
+      navigation.navigate("WhoIsMoreLikelyStack", { screen: "result" });
     }
   },
 }));

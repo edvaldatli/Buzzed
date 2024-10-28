@@ -2,21 +2,24 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 
-import Index from "@/app/index";
-import JoinGameScreen from "@/app/joinGame";
-import CreateGameScreen from "@/app/createGame";
-import EnterNameScreen from "@/app/enterName";
-import LobbyScreen from "@/app/lobby";
-import PlayerImage from "@/app/playerImage";
-import IntroScreen from "@/app/intro";
-import ErrorScreen from "@/app/error";
+// Main screens
+import Index from "@/app/Main/index";
+import JoinGameScreen from "@/app/Main/joinGame";
+import CreateGameScreen from "@/app/Main/createGame";
+import EnterNameScreen from "@/app/Main/enterName";
+import LobbyScreen from "@/app/Main/lobby";
+import PlayerImage from "@/app/Main/playerImage";
+import ErrorScreen from "@/app/Main/error";
+
+import WhoIsMoreLikelyStack from "./Games/WhoIsMoreLikelyStack/Stack";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function RootLayout() {
   return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
+    <NavigationContainer independent>
+      {/*Main navigation stack*/}
+      <Stack.Navigator initialRouteName="index">
         <Stack.Screen
           name="index"
           component={Index}
@@ -55,14 +58,24 @@ export default function RootLayout() {
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen
-          name="intro"
-          component={IntroScreen}
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
           name="error"
           component={ErrorScreen}
           options={{ headerShown: false, gestureEnabled: false }}
+        />
+
+        {/*Who is more likley game stack*/}
+        <Stack.Screen
+          name="WhoIsMoreLikelyStack"
+          component={WhoIsMoreLikelyStack}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+            cardStyleInterpolator: ({ current, next }) => ({
+              cardStyle: {
+                opacity: current.progress,
+              },
+            }),
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
