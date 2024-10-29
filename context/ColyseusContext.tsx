@@ -6,6 +6,7 @@ import { NavigationProp } from "@react-navigation/native";
 interface ColyseusState {
   client: Colyseus.Client | null;
   currentRoom: Colyseus.Room | null;
+  gameState: any;
   players: any[];
   connected: boolean;
   navigation: NavigationProp<any> | null; // Update the type to handle the navigation object
@@ -29,6 +30,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   currentRoom: null,
   players: [],
   connected: false,
+  gameState: null,
   navigation: null, // Initialize navigation as null
   setNavigation: (navigation) => set({ navigation }), // This will store the navigation object
 
@@ -39,7 +41,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://172.20.10.2:2567");
     set({ client });
 
     try {
@@ -51,6 +53,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
       room.onStateChange((state: any) => {
         set({ players: [...state.players] }); // Ensure React updates the players list
+        set({ gameState: state });
         get().handleNavigation(state.gameState); // Trigger handleNavigation based on gameState
       });
 
@@ -67,7 +70,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://172.20.10.2:2567");
     set({ client });
 
     try {

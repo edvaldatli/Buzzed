@@ -11,6 +11,7 @@ import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
 import QrCode from "@/components/qrCode";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
 
@@ -40,6 +41,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const handleStartGame = () => {
     // Emit start game event or logic
     currentRoom?.send("startGame");
+  };
+
+  const votePlayer = (playerVoted: any) => {
+    currentRoom?.send("votePlayer", playerVoted);
   };
 
   if (!currentRoom) {
@@ -80,7 +85,9 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
         <View style={styles.playersContainer}>
           {players.map((player) => (
             <View key={player.id} style={styles.playerWrapper}>
-              <LobbyAvatar player={player} />
+              <TouchableOpacity onPress={() => votePlayer(player)}>
+                <LobbyAvatar player={player} />
+              </TouchableOpacity>
               <View style={styles.spacer} />
             </View>
           ))}
