@@ -24,11 +24,7 @@ export default function CreateGameScreen({
   useEffect(() => {
     const createNewGame = async () => {
       try {
-        if (!image) {
-          throw new Error("Image is missing");
-        }
-
-        createRoom(name, image);
+        createRoom(name, image!);
 
         console.log("Game room created successfully");
       } catch (error) {

@@ -29,21 +29,31 @@ export default function PlayerImage({
 
   const handleNext = async () => {
     if (permission) {
-      const photo = await cameraRef.current?.takePictureAsync({
-        base64: true,
-        quality: 0.1,
-      });
-      if (photo?.base64) {
-        const imageBase64 = photo.base64;
-        console.log("Image captured");
+      try {
+        const photo = await cameraRef.current?.takePictureAsync({
+          base64: true,
+          quality: 0.1,
+        });
+        if (photo?.base64) {
+          const imageBase64 = photo.base64;
+          console.log("Image captured");
 
-        if (type === "createGame") {
-          navigation.navigate("createGame", { name, image: imageBase64 });
+          if (type === "createGame") {
+            navigation.navigate("createGame", { name, image: imageBase64 });
+          } else {
+            navigation.navigate("joinGame", { name, image: imageBase64 });
+          }
         } else {
-          navigation.navigate("joinGame", { name, image: imageBase64 });
+          console.error("Error uploading image");
         }
-      } else {
-        console.error("Error uploading image");
+      } catch (e) {
+        console.error("Failed taking picture");
+      } finally {
+        if (type === "createGame") {
+          navigation.navigate("createGame", { name, image: null });
+        } else {
+          navigation.navigate("joinGame", { name, image: null });
+        }
       }
     } else {
       console.error("Camera permission not granted");
@@ -65,7 +75,7 @@ export default function PlayerImage({
           style={styles.background}
         />
         <View className="flex h-full w-full">
-          <PrimaryText tlw="text-center text-7xl">
+          <PrimaryText tlw="text-center text-5xl">
             Please allow camera access
           </PrimaryText>
         </View>
@@ -81,7 +91,7 @@ export default function PlayerImage({
         style={styles.background}
       />
       <View className="flex justify-around items-center w-full h-full p-12">
-        <PrimaryText tlw="text-center text-7xl">Snap that selfie</PrimaryText>
+        <PrimaryText tlw="text-center text-5xl">Snap that selfie</PrimaryText>
         {cameraActive && (
           <CameraView
             style={styles.camera}

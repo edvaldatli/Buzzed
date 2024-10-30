@@ -1,10 +1,11 @@
 import PrimaryText from "@/components/primaryText";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
 export default function QuestionScreen() {
-  const { rounds, currentRoundIndex } = useColyseusStore();
+  const { rounds } = useColyseusStore();
 
   return (
     <View className="h-full w-full justify-around items-center p-12">

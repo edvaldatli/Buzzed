@@ -1,4 +1,5 @@
 import LobbyAvatar from "@/components/lobbyAvatar";
+import PrimaryText from "@/components/primaryText";
 import Timer from "@/components/timer";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,7 +26,17 @@ export default function VotingScreen() {
 
       <Timer />
 
-      <View className="w-full h-full flex justify-center">
+      <View className="mt-20">
+        <PrimaryText tlw="text-3xl text-center">
+          Who is more likely to
+        </PrimaryText>
+        <View className="h-4" />
+        <PrimaryText tlw="text-5xl text-white text-center">
+          {rounds[rounds.length - 1].question}
+        </PrimaryText>
+      </View>
+
+      <View className="w-full h-1/2 justify-center">
         {firstPlayer && (
           <TouchableOpacity onPress={() => votePlayer(firstPlayer.id)}>
             <LobbyAvatar player={firstPlayer} />
