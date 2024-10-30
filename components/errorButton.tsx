@@ -1,4 +1,4 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type ErrorButtonProps = {
   text: string;
@@ -7,7 +7,7 @@ type ErrorButtonProps = {
 
 export default function ErrorButton({ text, handlePress }: ErrorButtonProps) {
   return (
-    <Pressable
+    <TouchableOpacity
       className="flex justify-center items-center bg-error w-full h-14 rounded-full"
       style={styles.buttonStyle}
       onPress={handlePress}
@@ -18,7 +18,7 @@ export default function ErrorButton({ text, handlePress }: ErrorButtonProps) {
       >
         {text}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

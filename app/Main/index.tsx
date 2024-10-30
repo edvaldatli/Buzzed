@@ -37,11 +37,22 @@ export default function Index() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", duration: 400 }}
       >
-        <Image
-          source={require("@/assets/images/buzzedTitleText.png")}
-          className="w-64 h-32 object-contain"
-          style={{ resizeMode: "contain" }}
-        />
+        <MotiView
+          from={{ scale: 0.85 }}
+          animate={{ scale: 1.1 }}
+          transition={{
+            type: "timing",
+            duration: 3000,
+            loop: true,
+            delay: 100,
+          }}
+        >
+          <Image
+            source={require("@/assets/images/buzzedTitleText.png")}
+            className="w-64 h-32 object-contain"
+            style={{ resizeMode: "contain" }}
+          />
+        </MotiView>
       </MotiView>
 
       <View className="flex flex-col justify-around h-48 w-full">

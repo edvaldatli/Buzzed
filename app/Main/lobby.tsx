@@ -92,7 +92,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
             </View>
           ))}
         </View>
-        <View style={styles.actionContainer}>
+        <View style={styles.actionContainer} className="w-full">
           {host?.id === userId ? (
             <>
               <PrimaryButton text="Start game" handlePress={handleStartGame} />
@@ -103,6 +103,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
               Waiting on the homie with the crown
             </Text>
           )}
+          <View className="h-4" />
           <ErrorButton text="Leave" handlePress={handleLeave} />
         </View>
       </View>

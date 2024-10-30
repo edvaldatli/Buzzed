@@ -1,10 +1,11 @@
 import ErrorButton from "@/components/errorButton";
 import PrimaryButton from "@/components/primaryButton";
 import PrimaryText from "@/components/primaryText";
+import { useAsyncStorage } from "@/hooks/useAsyncStorage";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { StackScreenProps } from "@react-navigation/stack";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,13 +20,30 @@ export default function EnterNameScreen({
   route,
   navigation,
 }: EnterNameScreenProps) {
+  const { getData, storeData } = useAsyncStorage();
   const { type } = route.params;
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    async function getName() {
+      const storedName = await getData("name");
+      if (storedName) {
+        setName(storedName);
+      }
+    }
+    getName();
+  }, []);
+
+  const storeName = async (name: string) => {
+    await storeData("name", name);
+  };
+
   const handleNext = () => {
     if (name === "") {
       setError("Lets put in that name");
     } else {
+      storeName(name);
       navigation.navigate("playerImage", { name, type });
     }
   };

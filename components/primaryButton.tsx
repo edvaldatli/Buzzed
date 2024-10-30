@@ -1,4 +1,4 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type PositiveButtonProps = {
   text: string;
@@ -10,7 +10,7 @@ export default function PositiveButton({
   handlePress,
 }: PositiveButtonProps) {
   return (
-    <Pressable
+    <TouchableOpacity
       className="flex justify-center items-center bg-primaryPink w-full h-14 rounded-full shadow-md"
       style={styles.buttonStyle}
       onPress={handlePress}
@@ -21,7 +21,7 @@ export default function PositiveButton({
       >
         {text}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
