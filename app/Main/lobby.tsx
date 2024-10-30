@@ -5,19 +5,38 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Accelerometer } from "expo-sensors";
 
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
 import QrCode from "@/components/qrCode";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import QRCodeModal from "@/components/QrCodeModal";
+import FlipPhoneIcon from "@/components/flipPhoneIcon";
 
 type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
 
 export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
   const [userId, setUserId] = useState<string>("");
+
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  useEffect(() => {
+    // Set accelerometer update interval
+    Accelerometer.setUpdateInterval(200);
+
+    // Subscribe to accelerometer data
+    const subscription = Accelerometer.addListener(({ x, y }) => {
+      const landscape = Math.abs(x) > Math.abs(y);
+      setIsLandscape(landscape);
+    });
+
+    // Clean up the subscription on unmount
+    return () => subscription.remove();
+  }, []);
 
   const setNavigation = useColyseusStore((state) => state.setNavigation);
 
@@ -39,7 +58,6 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   };
 
   const handleStartGame = () => {
-    // Emit start game event or logic
     currentRoom?.send("startGame");
   };
 
@@ -61,7 +79,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
     );
   }
 
-  const host = currentRoom.state.host; // Assuming host is part of the state
+  const host = currentRoom.state.host;
 
   if (!currentRoom) {
     return (
@@ -72,42 +90,65 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
-      <QrCode data={currentRoom.roomId} />
-      <View style={styles.container}>
-        <PrimaryText tlw="text-6xl text-center">The crew</PrimaryText>
-        <View style={styles.spacer} />
-        <View style={styles.playersContainer}>
-          {players.map((player) => (
-            <View key={player.id} style={styles.playerWrapper}>
-              <TouchableOpacity onPress={() => votePlayer(player)}>
-                <LobbyAvatar player={player} />
-              </TouchableOpacity>
-              <View style={styles.spacer} />
-            </View>
-          ))}
-        </View>
-        <View style={styles.actionContainer} className="w-full">
-          {host?.id === userId ? (
-            <>
-              <PrimaryButton text="Start game" handlePress={handleStartGame} />
-              <View style={styles.spacerLarge} />
-            </>
-          ) : (
-            <Text style={styles.waitingText}>
-              Waiting on the homie with the crown
-            </Text>
-          )}
-          <View className="h-4" />
-          <ErrorButton text="Leave" handlePress={handleLeave} />
-        </View>
+    <>
+      <View className="">
+        {isLandscape && <QRCodeModal value={currentRoom.id} />}
       </View>
-    </SafeAreaView>
+      <SafeAreaView className="flex p-12 h-full w-full">
+        <LinearGradient
+          colors={["#E33EB0", "#FD841F"]}
+          locations={[0.1, 0.5]}
+          style={styles.background}
+        />
+        <View className="rounded-lg w-20 h-20 justify-center items-center absolute right-0 top-10">
+          <FlipPhoneIcon className=" text-white" />
+          <PrimaryText tlw="text-xs text-center">Join code</PrimaryText>
+        </View>
+        <View style={styles.container}>
+          <PrimaryText tlw="text-6xl text-center">The crew</PrimaryText>
+          <View style={styles.spacer} />
+          <View style={styles.playersContainer}>
+            {players.map((player) => (
+              <View key={player.id} style={styles.playerWrapper}>
+                <TouchableOpacity onPress={() => votePlayer(player)}>
+                  <LobbyAvatar player={player} />
+                </TouchableOpacity>
+                <View style={styles.spacer} />
+              </View>
+            ))}
+          </View>
+          <View style={styles.actionContainer} className="w-full">
+            {host?.id === userId ? (
+              players.length > 1 ? (
+                <>
+                  <PrimaryButton
+                    text="Start game"
+                    handlePress={handleStartGame}
+                  />
+                  <View style={styles.spacerLarge} />
+                </>
+              ) : (
+                <>
+                  <PrimaryButton
+                    text="Waiting for players"
+                    handlePress={handleStartGame}
+                    tlw="bg-gray-400"
+                    disabled
+                  />
+                  <View style={styles.spacerLarge} />
+                </>
+              )
+            ) : (
+              <Text style={styles.waitingText}>
+                Waiting on the homie with the crown
+              </Text>
+            )}
+            <View className="h-4" />
+            <ErrorButton text="Leave" handlePress={handleLeave} />
+          </View>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -125,12 +166,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-  },
-  safeArea: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 40,
   },
   container: {
     flex: 1,

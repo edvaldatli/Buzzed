@@ -3,6 +3,7 @@ import { View } from "react-native";
 import PrimaryText from "./primaryText";
 import { Image } from "expo-image";
 import { useEffect } from "react";
+import { MotiView } from "moti";
 
 type LobbyAvatarProps = {
   player: Player;
@@ -13,7 +14,12 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
     console.log("Player: ", player);
   }, [player]);
   return (
-    <View className="flex flex-row items-center">
+    <MotiView
+      className="flex flex-row items-center"
+      from={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: "timing", duration: 200 }}
+    >
       <Image
         source={
           player.avatar == "default-avatar-url"
@@ -24,6 +30,6 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
       />
       <View className="w-3" />
       <PrimaryText tlw="text-3xl text-white">{player.name}</PrimaryText>
-    </View>
+    </MotiView>
   );
 }
