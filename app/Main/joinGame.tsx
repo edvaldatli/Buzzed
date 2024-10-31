@@ -10,6 +10,7 @@ import { BarcodeScanningResult } from "expo-camera";
 import { useEffect, useState } from "react";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { MotiView } from "moti";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type JoinGameScreenProps = StackScreenProps<RootStackParamList, "joinGame">;
 
@@ -49,11 +50,7 @@ export default function JoinGameScreen({
   if (loading) {
     return (
       <View className="flex h-full justify-center items-center p-12">
-        <LinearGradient
-          colors={["#E33EB0", "#FD841F"]}
-          locations={[0.1, 0.5]}
-          style={styles.background}
-        />
+        <BackgroundGradient style={styles.background} />
         <PrimaryText tlw="text-3xl text-center">Loading...</PrimaryText>
         <ActivityIndicator />
       </View>
@@ -68,11 +65,7 @@ export default function JoinGameScreen({
       exit={{ opacity: 0 }}
     >
       <View className="flex h-full justify-around items-center p-12">
-        <LinearGradient
-          colors={["#E33EB0", "#FD841F"]}
-          locations={[0.1, 0.5]}
-          style={styles.background}
-        />
+        <BackgroundGradient style={styles.background} />
         <PrimaryText tlw="text-3xl text-center">
           Scan your friend's QR code
         </PrimaryText>

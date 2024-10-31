@@ -2,7 +2,7 @@
   "expo": {
     "name": "Buzzed",
     "slug": "Buzzed",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -13,13 +13,18 @@
       "backgroundColor": "#FD841F"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.FrostFallStudios.Buzzed"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -32,8 +37,25 @@
         "expo-font",
         {
           "fonts": [
-            "assets/fonts/Rubik/Rubik-Black.ttf","assets/fonts/Rubik/Rubik-BlackItalic.ttf", "assets/fonts/Rubik/Rubik-Bold.ttf", "assets/fonts/Rubik/Rubik-BoldItalic.ttf", "assets/fonts/Rubik/Rubik-Italic.ttf", "assets/fonts/Rubik/Rubik-Light.ttf", "assets/fonts/Rubik/Rubik-LightItalic.ttf", "assets/fonts/Rubik/Rubik-Medium.ttf", "assets/fonts/Rubik/Rubik-MediumItalic.ttf", "assets/fonts/Rubik/Rubik-Regular.ttf", "assets/fonts/Rubik/Rubik-SemiBold.ttf", "assets/fonts/Rubik/Rubik-SemiBoldItalic.ttf", "assets/fonts/Rubik/Rubik-Light.ttf", "assets/fonts/Rubik/Rubik-LightItalic.ttf",
-            "assets/fonts/Signika/SignikaNegative-Bold.ttf", "assets/fonts/Signika/SignikaNegative-Light.ttf", "assets/fonts/Signika/SignikaNegative-Regular.ttf", "assets/fonts/Signika/SignikaNegative-SemiBold.ttf", "assets/fonts/Signika/SignikaNegative-Medium.ttf"
+            "assets/fonts/Rubik/Rubik-Black.ttf",
+            "assets/fonts/Rubik/Rubik-BlackItalic.ttf",
+            "assets/fonts/Rubik/Rubik-Bold.ttf",
+            "assets/fonts/Rubik/Rubik-BoldItalic.ttf",
+            "assets/fonts/Rubik/Rubik-Italic.ttf",
+            "assets/fonts/Rubik/Rubik-Light.ttf",
+            "assets/fonts/Rubik/Rubik-LightItalic.ttf",
+            "assets/fonts/Rubik/Rubik-Medium.ttf",
+            "assets/fonts/Rubik/Rubik-MediumItalic.ttf",
+            "assets/fonts/Rubik/Rubik-Regular.ttf",
+            "assets/fonts/Rubik/Rubik-SemiBold.ttf",
+            "assets/fonts/Rubik/Rubik-SemiBoldItalic.ttf",
+            "assets/fonts/Rubik/Rubik-Light.ttf",
+            "assets/fonts/Rubik/Rubik-LightItalic.ttf",
+            "assets/fonts/Signika/SignikaNegative-Bold.ttf",
+            "assets/fonts/Signika/SignikaNegative-Light.ttf",
+            "assets/fonts/Signika/SignikaNegative-Regular.ttf",
+            "assets/fonts/Signika/SignikaNegative-SemiBold.ttf",
+            "assets/fonts/Signika/SignikaNegative-Medium.ttf"
           ]
         }
       ],
@@ -46,6 +68,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "99a5d268-4e11-45cf-b179-cee7baab9240"
+      }
     }
   }
 }

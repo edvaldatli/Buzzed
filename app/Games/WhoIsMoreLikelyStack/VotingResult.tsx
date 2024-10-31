@@ -3,6 +3,7 @@ import { useColyseusStore } from "@/context/ColyseusContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 export default function VotingResultScreen() {
   const { rounds, players } = useColyseusStore();
@@ -13,11 +14,7 @@ export default function VotingResultScreen() {
 
   return (
     <View className="h-full w-full justify-around items-center p-12">
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
+      <BackgroundGradient style={styles.background} />
       <PrimaryText tlw="text-5xl text-center">Smells like a winner</PrimaryText>
       <View className="flex justify-center items-center bg-white shadow-lg p-4 rounded-lg">
         <Image

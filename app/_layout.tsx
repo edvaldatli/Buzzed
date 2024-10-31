@@ -28,12 +28,28 @@ export default function RootLayout() {
         <Stack.Screen
           name="joinGame"
           component={JoinGameScreen}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+            cardStyleInterpolator: ({ current, next }) => ({
+              cardStyle: {
+                opacity: current.progress,
+              },
+            }),
+          }}
         />
         <Stack.Screen
           name="createGame"
           component={CreateGameScreen}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+            cardStyleInterpolator: ({ current, next }) => ({
+              cardStyle: {
+                opacity: current.progress,
+              },
+            }),
+          }}
         />
         <Stack.Screen
           name="enterName"
@@ -50,12 +66,20 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
+            cardStyleInterpolator: ({ current, next }) => ({
+              cardStyle: {
+                opacity: current.progress,
+              },
+            }),
           }}
         />
         <Stack.Screen
           name="playerImage"
           component={PlayerImage}
-          options={{ headerShown: false, gestureEnabled: false }}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
         />
         <Stack.Screen
           name="error"

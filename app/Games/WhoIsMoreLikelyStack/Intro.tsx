@@ -2,15 +2,12 @@ import PrimaryText from "@/components/primaryText";
 import { View, StyleSheet, Text } from "react-native";
 import AccentText from "@/components/accentText";
 import { LinearGradient } from "expo-linear-gradient";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 export default function IntroScreen() {
   return (
     <View className="h-full w-full justify-center items-center p-12">
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
+      <BackgroundGradient style={styles.background} />
       <View className="mb-20">
         <PrimaryText tlw="text-4xl text-center mb-8">
           Get ready for...

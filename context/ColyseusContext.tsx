@@ -45,7 +45,9 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client(
+      "https://nl-ams-6cae0481.colyseus.cloud"
+    );
     set({ client });
 
     try {
@@ -77,7 +79,9 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client(
+      "https://nl-ams-6cae0481.colyseus.cloud"
+    );
     set({ client });
 
     try {

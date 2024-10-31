@@ -10,6 +10,7 @@ import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useCustomFonts } from "@/hooks/useCustomFonts";
 import PrimaryText from "@/components/primaryText";
 import { Image } from "expo-image";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
@@ -27,11 +28,7 @@ export default function Index() {
 
   return (
     <View className="flex justify-around items-center h-full p-12 ">
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
+      <BackgroundGradient style={styles.background} />
       <MotiView
         from={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

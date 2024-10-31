@@ -15,6 +15,7 @@ import PrimaryButton from "@/components/primaryButton";
 import QrCode from "@/components/qrCode";
 import QRCodeModal from "@/components/QrCodeModal";
 import FlipPhoneIcon from "@/components/flipPhoneIcon";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
 
@@ -68,11 +69,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   if (!currentRoom) {
     return (
       <View style={styles.loadingContainer}>
-        <LinearGradient
-          colors={["#E33EB0", "#FD841F"]}
-          locations={[0.1, 0.5]}
-          style={styles.background}
-        />
+        <BackgroundGradient style={styles.background} />
         <PrimaryText tlw="text-4xl text-center">Loading...</PrimaryText>
         <ActivityIndicator />
       </View>

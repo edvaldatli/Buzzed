@@ -8,6 +8,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ErrorButton from "@/components/errorButton";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type PlayerImageScreenProps = StackScreenProps<
   RootStackParamList,
@@ -19,65 +20,62 @@ export default function PlayerImage({
   navigation,
 }: PlayerImageScreenProps) {
   const { permission, requestPermission } = useCamera();
-  const [cameraActive] = useState<boolean>(true);
+  const [cameraActive, setCameraActive] = useState<boolean>(false);
   const { name, type } = route.params;
   const cameraRef = useRef<CameraView>(null);
 
   useEffect(() => {
-    console.log(name, type);
-  }, []);
+    // Request permission only if not granted
+    if (!permission) {
+      requestPermission();
+    } else {
+      setCameraActive(true); // Activate the camera when permission is granted
+    }
+  }, [permission]);
 
   const handleNext = async () => {
-    if (permission) {
-      try {
-        const photo = await cameraRef.current?.takePictureAsync({
-          base64: true,
-          quality: 0.1,
-        });
-        if (photo?.base64) {
-          const imageBase64 = photo.base64;
-          console.log("Image captured");
+    if (!cameraRef.current) return;
 
-          if (type === "createGame") {
-            navigation.navigate("createGame", { name, image: imageBase64 });
-          } else {
-            navigation.navigate("joinGame", { name, image: imageBase64 });
-          }
-        } else {
-          console.error("Error uploading image");
-        }
-      } catch (e) {
-        console.error("Failed taking picture");
-      } finally {
-        if (type === "createGame") {
-          navigation.navigate("createGame", { name, image: null });
-        } else {
-          navigation.navigate("joinGame", { name, image: null });
-        }
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        base64: true,
+        quality: 0.1,
+      });
+
+      if (photo?.base64) {
+        const imageBase64 = photo.base64;
+        console.log("Image captured");
+
+        navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
+          name,
+          image: imageBase64,
+        });
       }
-    } else {
-      console.error("Camera permission not granted");
+    } catch (error) {
+      console.error("Error taking picture:", error);
+    } finally {
+      // If photo capture fails, navigate with `null` image
+      navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
+        name,
+        image: null,
+      });
     }
   };
 
-  useEffect(() => {
-    if (!permission) {
-      requestPermission();
-    }
-  }, []);
-
   if (!permission) {
+    // Show permission request message if permission is not granted
     return (
       <>
-        <LinearGradient
-          colors={["#E33EB0", "#FD841F"]}
-          locations={[0.1, 0.5]}
-          style={styles.background}
-        />
-        <View className="flex h-full w-full">
+        <BackgroundGradient style={styles.background} />
+        <View className="flex h-full w-full justify-center items-center p-12">
           <PrimaryText tlw="text-center text-5xl">
             Please allow camera access
           </PrimaryText>
+          <PositiveButton
+            text="Allow Camera Access"
+            handlePress={requestPermission}
+          />
+          <ErrorButton text="Cancel" handlePress={() => navigation.goBack()} />
         </View>
       </>
     );
@@ -85,11 +83,7 @@ export default function PlayerImage({
 
   return (
     <>
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
+      <BackgroundGradient style={styles.background} />
       <View className="flex justify-around items-center w-full h-full p-12">
         <PrimaryText tlw="text-center text-5xl">Snap that selfie</PrimaryText>
         {cameraActive && (
@@ -101,14 +95,9 @@ export default function PlayerImage({
           />
         )}
         <View className="flex flex-col justify-end w-full h-20">
-          <PositiveButton text="Cheese!" handlePress={() => handleNext()} />
-          <View className="h-4"></View>
-          <ErrorButton
-            text="Cancel"
-            handlePress={async () => {
-              navigation.goBack();
-            }}
-          ></ErrorButton>
+          <PositiveButton text="Cheese!" handlePress={handleNext} />
+          <View className="h-4" />
+          <ErrorButton text="Cancel" handlePress={() => navigation.goBack()} />
         </View>
       </View>
     </>
