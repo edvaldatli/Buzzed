@@ -97,6 +97,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           locations={[0.1, 0.5]}
           style={styles.background}
         />
+        <QrCode data={currentRoom.id} />
         <View className="rounded-lg w-20 h-20 justify-center items-center absolute right-0 top-10">
           <FlipPhoneIcon className=" text-white" />
           <PrimaryText tlw="text-xs text-center">Join code</PrimaryText>

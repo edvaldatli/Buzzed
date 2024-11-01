@@ -1,31 +1,42 @@
 import PrimaryText from "@/components/primaryText";
 import { useColyseusStore } from "@/context/ColyseusContext";
-import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import BackgroundGradient from "@/components/backgroundGradient";
+import { useEffect, useState } from "react";
+import { Player } from "@/types/GameTypes";
 
 export default function VotingResultScreen() {
   const { rounds, players } = useColyseusStore();
+  const [winner, setWinner] = useState<Player>();
 
-  const winnerid = rounds[rounds.length - 1].winner;
+  useEffect(() => {
+    const winnerid = rounds[rounds.length - 1].winner;
 
-  const winner = players.find((player) => player.id === winnerid);
+    const winner = players.find((player) => player.id === winnerid);
+
+    setWinner(winner);
+    console.log(winner);
+  }, []);
 
   return (
     <View className="h-full w-full justify-around items-center p-12">
       <BackgroundGradient style={styles.background} />
       <PrimaryText tlw="text-5xl text-center">Smells like a winner</PrimaryText>
       <View className="flex justify-center items-center bg-white shadow-lg p-4 rounded-lg">
-        <Image
-          source={
-            winner.avatar == "default-avatar-url"
-              ? require("../../../assets/images/avatar-placeholder.png")
-              : winner.avatar
-          }
-          className="w-20 h-20 rounded-full border-green-500 border-4"
-        />
-        <PrimaryText>{winner.name}</PrimaryText>
+        {winner && (
+          <>
+            <Image
+              source={
+                winner?.avatar == "default-avatar-url"
+                  ? require("../../../assets/images/avatar-placeholder.png")
+                  : winner?.avatar
+              }
+              className="w-20 h-20 rounded-full border-green-500 border-4"
+            />
+            <PrimaryText>{winner.name}</PrimaryText>
+          </>
+        )}
       </View>
       <View />
     </View>
