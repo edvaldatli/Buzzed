@@ -25,8 +25,7 @@ export default function PlayerImage({
   const cameraRef = useRef<CameraView>(null);
 
   useEffect(() => {
-    // Request permission only if not granted
-    if (!permission) {
+    if (!permission || !permission.granted) {
       requestPermission();
     } else {
       setCameraActive(true); // Activate the camera when permission is granted
@@ -54,7 +53,6 @@ export default function PlayerImage({
     } catch (error) {
       console.error("Error taking picture:", error);
     } finally {
-      // If photo capture fails, navigate with `null` image
       navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
         name,
         image: null,
@@ -62,8 +60,7 @@ export default function PlayerImage({
     }
   };
 
-  if (!permission) {
-    // Show permission request message if permission is not granted
+  if (!permission || !permission.granted) {
     return (
       <>
         <BackgroundGradient style={styles.background} />
