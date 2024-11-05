@@ -22,10 +22,13 @@ export default function VotingResultScreen() {
   return (
     <View className="h-full w-full justify-around items-center p-12">
       <BackgroundGradient style={styles.background} />
-      <PrimaryText tlw="text-5xl text-center">Smells like a winner</PrimaryText>
-      <View className="flex justify-center items-center bg-white shadow-lg p-4 rounded-lg">
-        {winner && (
-          <>
+
+      {winner ? (
+        <>
+          <PrimaryText tlw="text-5xl text-center">
+            Smells like a winner
+          </PrimaryText>
+          <View className="flex justify-center items-center bg-white shadow-lg p-4 rounded-lg">
             <Image
               source={
                 winner?.avatar == "default-avatar-url"
@@ -35,9 +38,16 @@ export default function VotingResultScreen() {
               className="w-20 h-20 rounded-full border-green-500 border-4"
             />
             <PrimaryText>{winner.name}</PrimaryText>
-          </>
-        )}
-      </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <PrimaryText tlw="text-center">It's a tie</PrimaryText>
+          <PrimaryText tlw="text-3xl text-center text-white">
+            Going to the next round
+          </PrimaryText>
+        </>
+      )}
       <View />
     </View>
   );

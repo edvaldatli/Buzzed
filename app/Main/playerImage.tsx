@@ -4,7 +4,6 @@ import useCamera from "@/hooks/useCamera";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { StackScreenProps } from "@react-navigation/stack";
 import { CameraView } from "expo-camera";
-import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ErrorButton from "@/components/errorButton";

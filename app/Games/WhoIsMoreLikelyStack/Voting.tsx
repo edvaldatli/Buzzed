@@ -5,6 +5,8 @@ import { useColyseusStore } from "@/context/ColyseusContext";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import { useRef } from "react";
+import { MotiView, useAnimationState } from "moti";
 
 export default function VotingScreen() {
   const { rounds, currentRoom, players } = useColyseusStore();
@@ -12,7 +14,42 @@ export default function VotingScreen() {
   const latestRound = rounds[rounds.length - 1];
   const [firstPlayer, secondPlayer] = latestRound?.battlingPlayers || [];
 
+  const firstPlayerAnimation = useAnimationState({
+    idle: { scale: 1 },
+    clicked: { translateY: 50, scale: 1.2 },
+    hide: {
+      translateY: 50,
+      opacity: 0,
+      scale: 0.8,
+      transition: { duration: 0.5 },
+    },
+  });
+  const secondPlayerAnimation = useAnimationState({
+    idle: { scale: 1 },
+    clicked: { translateY: -50, scale: 1.2 },
+    hide: {
+      translateY: -50,
+      opacity: 0,
+      scale: 0.8,
+      transition: { duration: 0.5 },
+    },
+  });
+  const orTextAnimation = useAnimationState({
+    idle: { scale: 1 },
+    hide: { opacity: 0, scale: 0.8 },
+  });
+
   const votePlayer = (playerId: string) => {
+    if (playerId === firstPlayer.id) {
+      firstPlayerAnimation.transitionTo("clicked");
+      secondPlayerAnimation.transitionTo("hide");
+    } else if (playerId === secondPlayer.id) {
+      secondPlayerAnimation.transitionTo("clicked");
+      firstPlayerAnimation.transitionTo("hide");
+    }
+
+    orTextAnimation.transitionTo("hide");
+
     currentRoom?.send("votePlayer", playerId);
   };
 
@@ -32,22 +69,38 @@ export default function VotingScreen() {
 
       <View className="w-full h-1/2 justify-center">
         {firstPlayer && (
-          <TouchableOpacity onPress={() => votePlayer(firstPlayer.id)}>
-            <View className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg">
+          <TouchableOpacity
+            onPress={() => votePlayer(firstPlayer.id)}
+            key={firstPlayer.id}
+          >
+            <MotiView
+              className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg"
+              state={firstPlayerAnimation}
+            >
               <PrimaryText tlw="text-4xl text-center text-white">
                 {firstPlayer.name}
               </PrimaryText>
-            </View>
+            </MotiView>
           </TouchableOpacity>
         )}
-        <PrimaryText tlw="text-xl text-white text-center my-2">OR</PrimaryText>
+        <MotiView state={orTextAnimation}>
+          <PrimaryText tlw="text-xl text-white text-center my-2">
+            OR
+          </PrimaryText>
+        </MotiView>
         {secondPlayer && (
-          <TouchableOpacity onPress={() => votePlayer(secondPlayer.id)}>
-            <View className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg">
+          <TouchableOpacity
+            onPress={() => votePlayer(secondPlayer.id)}
+            key={secondPlayer.id}
+          >
+            <MotiView
+              className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg"
+              state={secondPlayerAnimation}
+            >
               <PrimaryText tlw="text-4xl text-center text-white">
                 {secondPlayer.name}
               </PrimaryText>
-            </View>
+            </MotiView>
           </TouchableOpacity>
         )}
       </View>

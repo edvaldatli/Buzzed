@@ -6,7 +6,7 @@ import { NavigationProp } from "@react-navigation/native";
 interface ColyseusState {
   client: Colyseus.Client | null;
   currentRoom: Colyseus.Room | null;
-  gameState: any;
+  gameState: Object | null;
   currentRoundIndex: number;
   rounds: any[];
   players: any[];
@@ -45,9 +45,8 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client(
-      "https://nl-ams-6cae0481.colyseus.cloud"
-    );
+    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    console.log("Creating room with client:", client);
     set({ client });
 
     try {
@@ -60,10 +59,10 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       room.onStateChange((state: any) => {
         console.log(state.currentRoundIndex);
         set({ currentRoundIndex: state.currentRoundIndex });
-        set({ players: [...state.players] }); // Ensure React updates the players list
+        set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
-        get().handleNavigation(state.gameState); // Trigger handleNavigation based on gameState
+        get().handleNavigation(state.gameState);
       });
 
       room.onLeave(() => {
@@ -79,9 +78,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client(
-      "https://nl-ams-6cae0481.colyseus.cloud"
-    );
+    const client = new Colyseus.Client("ws://192.168.50.230:2567");
     set({ client });
 
     try {
@@ -93,10 +90,10 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
       room.onStateChange((state: any) => {
         set({ currentRoundIndex: state.currentRoundIndex });
-        set({ players: [...state.players] }); // Ensure React updates the players list
+        set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
-        get().handleNavigation(state.gameState); // Trigger handleNavigation based on gameState
+        get().handleNavigation(state.gameState);
       });
 
       room.onLeave(() => {
