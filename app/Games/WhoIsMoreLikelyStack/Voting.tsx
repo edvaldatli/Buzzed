@@ -5,53 +5,77 @@ import { useColyseusStore } from "@/context/ColyseusContext";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
-import { useRef } from "react";
-import { MotiView, useAnimationState } from "moti";
+import { useEffect, useState } from "react";
+import { AnimatePresence, MotiView, useAnimationState } from "moti";
+import { Player } from "@/types/GameTypes";
 
 export default function VotingScreen() {
-  const { rounds, currentRoom, players } = useColyseusStore();
+  const { rounds, currentRoom, players, currentState } = useColyseusStore();
+  const [winner, setWinner] = useState<Player | null>(null);
 
   const latestRound = rounds[rounds.length - 1];
   const [firstPlayer, secondPlayer] = latestRound?.battlingPlayers || [];
 
   const firstPlayerAnimation = useAnimationState({
     idle: { scale: 1 },
-    clicked: { translateY: 50, scale: 1.2 },
-    hide: {
-      translateY: 50,
-      opacity: 0,
-      scale: 0.8,
-      transition: { duration: 0.5 },
-    },
+    clicked: { scale: 1.2 },
+    minimize: { opacity: 0.8, scale: 0.8, transition: { duration: 0.5 } },
+    hide: { opacity: 0, scale: 0.8 },
   });
   const secondPlayerAnimation = useAnimationState({
     idle: { scale: 1 },
-    clicked: { translateY: -50, scale: 1.2 },
-    hide: {
-      translateY: -50,
-      opacity: 0,
-      scale: 0.8,
-      transition: { duration: 0.5 },
-    },
+    clicked: { scale: 1.2 },
+    minimize: { opacity: 0.8, scale: 0.8, transition: { duration: 0.5 } },
+    hide: { opacity: 0, scale: 0.8 },
   });
   const orTextAnimation = useAnimationState({
     idle: { scale: 1 },
     hide: { opacity: 0, scale: 0.8 },
   });
+  const winnerAnimation = useAnimationState({
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 1, type: "spring" },
+    },
+  });
 
+  // Handle vote and animations for players
   const votePlayer = (playerId: string) => {
     if (playerId === firstPlayer.id) {
       firstPlayerAnimation.transitionTo("clicked");
-      secondPlayerAnimation.transitionTo("hide");
+      secondPlayerAnimation.transitionTo("minimize");
     } else if (playerId === secondPlayer.id) {
       secondPlayerAnimation.transitionTo("clicked");
-      firstPlayerAnimation.transitionTo("hide");
+      firstPlayerAnimation.transitionTo("minimize");
     }
-
     orTextAnimation.transitionTo("hide");
 
     currentRoom?.send("votePlayer", playerId);
   };
+
+  // Handle winner display logic and ensure it animates smoothly
+  useEffect(() => {
+    if (currentState === "displaying_results") {
+      // Hide player animations
+      firstPlayerAnimation.transitionTo("hide");
+      secondPlayerAnimation.transitionTo("hide");
+      orTextAnimation.transitionTo("hide");
+
+      const winnerId = rounds[rounds.length - 1].winner;
+      const winningPlayer = players.find((player) => player.id === winnerId);
+      setWinner(winningPlayer);
+
+      // Delay transition to allow time for smooth animation
+      setTimeout(() => {
+        winnerAnimation.transitionTo("visible");
+      }, 500); // Adjust delay as needed
+    } else {
+      setWinner(null); // Reset winner
+      winnerAnimation.transitionTo("hidden"); // Reset animation
+    }
+  }, [currentState]);
 
   return (
     <SafeAreaView className="h-full w-full justify-start items-center p-12">
@@ -103,20 +127,38 @@ export default function VotingScreen() {
             </MotiView>
           </TouchableOpacity>
         )}
+        <AnimatePresence>
+          {winner && (
+            <MotiView
+              key={winner.id}
+              className="flex justify-center items-center bg-primaryPink shadow-lg w-full p-4 rounded-lg absolute"
+              state={winnerAnimation}
+            >
+              <Image
+                source={
+                  winner.avatar === "default-avatar-url"
+                    ? require("../../../assets/images/avatar-placeholder.png")
+                    : winner.avatar
+                }
+                className="w-20 h-20 rounded-full border-green-500 border-4"
+              />
+              <PrimaryText tlw="text-white text-2xl">{winner.name}</PrimaryText>
+            </MotiView>
+          )}
+        </AnimatePresence>
       </View>
       <View className="flex flex-row justify-around w-full h-full">
-        {players.map((player) => {
-          return (
-            <Image
-              source={
-                player.avatar == "default-avatar-url"
-                  ? require("../../../assets/images/avatar-placeholder.png")
-                  : player.avatar
-              }
-              className="w-16 h-16 rounded-full border-green-500 border-4"
-            />
-          );
-        })}
+        {players.map((player) => (
+          <Image
+            key={player.id}
+            source={
+              player.avatar === "default-avatar-url"
+                ? require("../../../assets/images/avatar-placeholder.png")
+                : player.avatar
+            }
+            className="w-16 h-16 rounded-full border-green-500 border-4"
+          />
+        ))}
       </View>
     </SafeAreaView>
   );

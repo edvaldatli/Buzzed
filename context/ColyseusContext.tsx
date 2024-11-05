@@ -7,6 +7,7 @@ interface ColyseusState {
   client: Colyseus.Client | null;
   currentRoom: Colyseus.Room | null;
   gameState: Object | null;
+  currentState: string;
   currentRoundIndex: number;
   rounds: any[];
   players: any[];
@@ -34,6 +35,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   connected: false,
   gameState: null,
   currentRoundIndex: 0,
+  currentState: "",
   rounds: [],
   navigation: null, // Initialize navigation as null
   setNavigation: (navigation) => set({ navigation }), // This will store the navigation object
@@ -62,6 +64,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
+        set({ currentState: state.gameState });
         get().handleNavigation(state.gameState);
       });
 
@@ -93,6 +96,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
+        set({ currentState: state.gameState });
         get().handleNavigation(state.gameState);
       });
 
@@ -127,8 +131,6 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       navigation.navigate("WhoIsMoreLikelyStack", { screen: "intro" });
     } else if (gameState === "round_in_progress") {
       navigation.navigate("WhoIsMoreLikelyStack", { screen: "voting" });
-    } else if (gameState === "displaying_results") {
-      navigation.navigate("WhoIsMoreLikelyStack", { screen: "votingResult" });
     } else if (gameState === "displaying_question") {
       navigation.navigate("WhoIsMoreLikelyStack", { screen: "question" });
     } else if (gameState === "end_game_screen") {
