@@ -5,14 +5,14 @@ import PositiveText from "@/components/primaryText";
 import Divider from "@/components/divider";
 import { MotiView } from "moti";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useCustomFonts } from "@/hooks/useCustomFonts";
 import PrimaryText from "@/components/primaryText";
 import { Image } from "expo-image";
 import BackgroundGradient from "@/components/backgroundGradient";
 
-type NavigationProp = StackNavigationProp<RootStackParamList>;
+type NavigationProp = NativeStackScreenProps<RootStackParamList>;
 
 export default function Index() {
   const navigation = useNavigation<NavigationProp>();

@@ -5,14 +5,17 @@ import QRCodeScanner from "@/components/qrCodeScanner";
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BarcodeScanningResult } from "expo-camera";
 import { useEffect, useState } from "react";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { MotiView } from "moti";
 import BackgroundGradient from "@/components/backgroundGradient";
 
-type JoinGameScreenProps = StackScreenProps<RootStackParamList, "joinGame">;
+type JoinGameScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "joinGame"
+>;
 
 export default function JoinGameScreen({
   route,

@@ -1,5 +1,5 @@
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Who is more likely screens
 import QuestionScreen from "@/app/Games/WhoIsMoreLikelyStack/Question";
@@ -8,7 +8,7 @@ import VotingResultScreen from "@/app/Games/WhoIsMoreLikelyStack/VotingResult";
 import IntroScreen from "@/app/Games/WhoIsMoreLikelyStack/Intro";
 import VotingScreen from "@/app/Games/WhoIsMoreLikelyStack/Voting";
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function WhoIsMoreLikelyStack() {
   return (
@@ -19,11 +19,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          cardStyleInterpolator: ({ current, next }) => ({
-            cardStyle: {
-              opacity: current.progress,
-            },
-          }),
+          animation: "fade",
         }}
       />
       <Stack.Screen
@@ -32,11 +28,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          cardStyleInterpolator: ({ current, next }) => ({
-            cardStyle: {
-              opacity: current.progress,
-            },
-          }),
+          animation: "fade",
         }}
       />
       <Stack.Screen
@@ -45,11 +37,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          cardStyleInterpolator: ({ current, next }) => ({
-            cardStyle: {
-              opacity: current.progress,
-            },
-          }),
+          animation: "fade",
         }}
       />
       <Stack.Screen
@@ -58,11 +46,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          cardStyleInterpolator: ({ current, next }) => ({
-            cardStyle: {
-              opacity: current.progress,
-            },
-          }),
+          animation: "fade",
         }}
       />
       <Stack.Screen
@@ -71,11 +55,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          cardStyleInterpolator: ({ current, next }) => ({
-            cardStyle: {
-              opacity: current.progress,
-            },
-          }),
+          animation: "fade",
         }}
       />
     </Stack.Navigator>

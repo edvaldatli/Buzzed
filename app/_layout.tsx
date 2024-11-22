@@ -1,5 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 
 // Main screens
@@ -12,13 +11,13 @@ import PlayerImage from "@/app/Main/playerImage";
 import ErrorScreen from "@/app/Main/error";
 
 import WhoIsMoreLikelyStack from "./Games/WhoIsMoreLikelyStack/Stack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootLayout() {
   return (
-    <NavigationContainer independent>
-      {/*Main navigation stack*/}
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack.Navigator initialRouteName="index">
         <Stack.Screen
           name="index"
@@ -31,11 +30,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
-            cardStyleInterpolator: ({ current, next }) => ({
-              cardStyle: {
-                opacity: current.progress,
-              },
-            }),
+            animation: "fade",
           }}
         />
         <Stack.Screen
@@ -44,11 +39,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
-            cardStyleInterpolator: ({ current, next }) => ({
-              cardStyle: {
-                opacity: current.progress,
-              },
-            }),
+            animation: "fade",
           }}
         />
         <Stack.Screen
@@ -66,11 +57,7 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
-            cardStyleInterpolator: ({ current, next }) => ({
-              cardStyle: {
-                opacity: current.progress,
-              },
-            }),
+            animation: "fade",
           }}
         />
         <Stack.Screen
@@ -94,14 +81,10 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
-            cardStyleInterpolator: ({ current, next }) => ({
-              cardStyle: {
-                opacity: current.progress,
-              },
-            }),
+            animation: "fade",
           }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

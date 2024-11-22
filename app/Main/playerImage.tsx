@@ -2,14 +2,14 @@ import PositiveButton from "@/components/primaryButton";
 import PrimaryText from "@/components/primaryText";
 import useCamera from "@/hooks/useCamera";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CameraView } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ErrorButton from "@/components/errorButton";
 import BackgroundGradient from "@/components/backgroundGradient";
 
-type PlayerImageScreenProps = StackScreenProps<
+type PlayerImageScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "playerImage"
 >;

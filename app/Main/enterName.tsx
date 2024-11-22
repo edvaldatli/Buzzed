@@ -4,7 +4,7 @@ import PrimaryButton from "@/components/primaryButton";
 import PrimaryText from "@/components/primaryText";
 import { useAsyncStorage } from "@/hooks/useAsyncStorage";
 import { RootStackParamList } from "@/navigation/RootStackParams";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import {
@@ -15,7 +15,10 @@ import {
   Platform,
 } from "react-native";
 
-type EnterNameScreenProps = StackScreenProps<RootStackParamList, "enterName">;
+type EnterNameScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "enterName"
+>;
 
 export default function EnterNameScreen({
   route,

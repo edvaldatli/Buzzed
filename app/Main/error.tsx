@@ -1,12 +1,12 @@
 import { View, StyleSheet } from "react-native";
 import PrimaryText from "@/components/primaryText";
 import PositiveButton from "@/components/primaryButton";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import BackgroundGradient from "@/components/backgroundGradient";
 
-type ErrorScreenProps = StackScreenProps<RootStackParamList, "error">;
+type ErrorScreenProps = NativeStackScreenProps<RootStackParamList, "error">;
 
 export default function ErrorScreen({ route, navigation }: ErrorScreenProps) {
   const { message } = route.params;

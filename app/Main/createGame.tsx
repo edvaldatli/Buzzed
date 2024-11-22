@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
 import { MotiView } from "moti";
 import { useColyseusStore } from "@/context/ColyseusContext"; // Import the Colyseus context
 
-type CreateGameScreen = StackScreenProps<RootStackParamList, "createGame">;
+type CreateGameScreen = NativeStackScreenProps<
+  RootStackParamList,
+  "createGame"
+>;
 
 export default function CreateGameScreen({
   route,

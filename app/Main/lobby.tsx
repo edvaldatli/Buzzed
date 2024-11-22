@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -17,7 +17,7 @@ import QRCodeModal from "@/components/QrCodeModal";
 import FlipPhoneIcon from "@/components/flipPhoneIcon";
 import BackgroundGradient from "@/components/backgroundGradient";
 
-type LobbyScreenProps = StackScreenProps<RootStackParamList, "lobby">;
+type LobbyScreenProps = NativeStackScreenProps<RootStackParamList, "lobby">;
 
 export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
