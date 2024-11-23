@@ -4,13 +4,9 @@ import { BarcodeScanningResult, CameraView } from "expo-camera";
 
 type QRCodeScannerProps = {
   onScan: (data: BarcodeScanningResult) => void;
-  disabled: boolean;
 };
 
-export default function QRCodeScanner({
-  onScan,
-  disabled,
-}: QRCodeScannerProps) {
+export default function QRCodeScanner({ onScan }: QRCodeScannerProps) {
   const { permission, requestPermission } = useCamera();
 
   if (permission?.status !== "granted") {
@@ -32,7 +28,6 @@ export default function QRCodeScanner({
           barcodeTypes: ["qr"],
         }}
         onBarcodeScanned={(data) => onScan(data)}
-        active={disabled}
       />
     </View>
   );
@@ -43,5 +38,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     width: 300,
     height: 300,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "white",
   },
 });

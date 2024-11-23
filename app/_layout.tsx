@@ -12,6 +12,7 @@ import ErrorScreen from "@/app/Main/error";
 
 import WhoIsMoreLikelyStack from "./Games/WhoIsMoreLikelyStack/Stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import QRCodeModalScreen from "./Main/qrCodeScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,6 +24,15 @@ export default function RootLayout() {
           name="index"
           component={Index}
           options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="qrCodeModal"
+          component={QRCodeModalScreen}
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+            presentation: "modal",
+          }}
         />
         <Stack.Screen
           name="joinGame"
@@ -81,7 +91,6 @@ export default function RootLayout() {
           options={{
             headerShown: false,
             gestureEnabled: false,
-            animation: "fade",
           }}
         />
       </Stack.Navigator>

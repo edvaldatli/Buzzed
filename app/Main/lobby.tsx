@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Accelerometer } from "expo-sensors";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
@@ -22,22 +22,6 @@ type LobbyScreenProps = NativeStackScreenProps<RootStackParamList, "lobby">;
 export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
   const [userId, setUserId] = useState<string>("");
-
-  const [isLandscape, setIsLandscape] = useState(false);
-
-  useEffect(() => {
-    // Set accelerometer update interval
-    Accelerometer.setUpdateInterval(200);
-
-    // Subscribe to accelerometer data
-    const subscription = Accelerometer.addListener(({ x, y }) => {
-      const landscape = Math.abs(x) > Math.abs(y);
-      setIsLandscape(landscape);
-    });
-
-    // Clean up the subscription on unmount
-    return () => subscription.remove();
-  }, []);
 
   const setNavigation = useColyseusStore((state) => state.setNavigation);
 
@@ -88,20 +72,21 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
 
   return (
     <>
-      <View className="">
-        {isLandscape && <QRCodeModal value={currentRoom.id} />}
-      </View>
-      <SafeAreaView className="flex p-12 h-full w-full">
+      <SafeAreaView style={styles.container}>
         <LinearGradient
           colors={["#E33EB0", "#FD841F"]}
           locations={[0.1, 0.5]}
           style={styles.background}
         />
-        <QrCode data={currentRoom.id} />
-        <View className="rounded-lg w-20 h-20 justify-center items-center absolute right-0 top-10">
-          <FlipPhoneIcon className=" text-white" />
-          <PrimaryText tlw="text-xs text-center">Join code</PrimaryText>
-        </View>
+        <MaterialCommunityIcons
+          name="qrcode-scan"
+          size={40}
+          color="#FD841F"
+          onPress={() =>
+            navigation.navigate("qrCodeModal", { value: currentRoom.id })
+          }
+          style={styles.openModalButton}
+        />
         <View style={styles.container}>
           <PrimaryText tlw="text-6xl text-center">The crew</PrimaryText>
           <View style={styles.spacer} />
@@ -168,7 +153,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingTop: 5,
+    padding: 20,
+    justifyContent: "space-around",
   },
   spacer: {
     height: 2,
@@ -187,13 +173,19 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   actionContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    gap: 5,
   },
   waitingText: {
     textAlign: "center",
     fontSize: 18,
     opacity: 0.5,
+  },
+  openModalButton: {
+    position: "absolute",
+    height: 60,
+    width: 60,
+    right: 0,
+    top: 50,
+    zIndex: 100,
   },
 });

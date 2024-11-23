@@ -6,7 +6,12 @@ import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
 export default function QuestionScreen() {
-  const { rounds } = useColyseusStore();
+  const { rounds, currentRoundIndex } = useColyseusStore();
+
+  useEffect(() => {
+    console.log("rounds", rounds);
+    console.log("currentRoundIndex", currentRoundIndex);
+  }, []);
 
   return (
     <View className="h-full w-full justify-around items-center p-12">
@@ -18,7 +23,7 @@ export default function QuestionScreen() {
           </PrimaryText>
           <View className="h-4" />
           <PrimaryText tlw="text-5xl text-center text-white w-full">
-            {rounds[rounds.length - 1].question}
+            {rounds[currentRoundIndex].question}
           </PrimaryText>
         </View>
       )}

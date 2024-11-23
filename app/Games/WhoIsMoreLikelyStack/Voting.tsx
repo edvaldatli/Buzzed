@@ -41,7 +41,6 @@ export default function VotingScreen() {
     },
   });
 
-  // Handle vote and animations for players
   const votePlayer = (playerId: string) => {
     if (playerId === firstPlayer.id) {
       firstPlayerAnimation.transitionTo("clicked");
@@ -55,10 +54,12 @@ export default function VotingScreen() {
     currentRoom?.send("votePlayer", playerId);
   };
 
-  // Handle winner display logic and ensure it animates smoothly
+  const handlePlayerVoted = (message: any) => {
+    console.log("Player voted", message);
+  };
+
   useEffect(() => {
     if (currentState === "displaying_results") {
-      // Hide player animations
       firstPlayerAnimation.transitionTo("hide");
       secondPlayerAnimation.transitionTo("hide");
       orTextAnimation.transitionTo("hide");
@@ -67,14 +68,17 @@ export default function VotingScreen() {
       const winningPlayer = players.find((player) => player.id === winnerId);
       setWinner(winningPlayer);
 
-      // Delay transition to allow time for smooth animation
       setTimeout(() => {
         winnerAnimation.transitionTo("visible");
-      }, 500); // Adjust delay as needed
+      }, 500);
     } else {
-      setWinner(null); // Reset winner
-      winnerAnimation.transitionTo("hidden"); // Reset animation
+      setWinner(null);
+      winnerAnimation.transitionTo("hidden");
     }
+
+    currentRoom?.onMessage("playerVoted", (message) => {
+      handlePlayerVoted(message);
+    });
   }, [currentState]);
 
   return (

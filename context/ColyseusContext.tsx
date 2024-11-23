@@ -38,7 +38,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   currentState: "",
   rounds: [],
   navigation: null, // Initialize navigation as null
-  setNavigation: (navigation) => set({ navigation }), // This will store the navigation object
+  setNavigation: (navigation) => set({ navigation }),
 
   setClient: (client: Colyseus.Client) => set(() => ({ client })),
   setCurrentRoom: (room: Colyseus.Room | null) =>
@@ -47,7 +47,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
   createRoom: async (playerName: string, avatarBase64: string) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://192.168.50.105:2567");
     console.log("Creating room with client:", client);
     set({ client });
 
@@ -64,8 +64,11 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
-        set({ currentState: state.gameState });
-        get().handleNavigation(state.gameState);
+      });
+
+      room.onMessage("navigate", (message: any) => {
+        console.log("Navigating to:", message);
+        get().handleNavigation(message);
       });
 
       room.onLeave(() => {
@@ -81,7 +84,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     playerName: string,
     avatarBase64: string
   ) => {
-    const client = new Colyseus.Client("ws://192.168.50.230:2567");
+    const client = new Colyseus.Client("ws://192.168.50.105:2567");
     set({ client });
 
     try {
@@ -96,8 +99,11 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         set({ players: [...state.players] });
         set({ gameState: state });
         set({ rounds: [...state.rounds] });
-        set({ currentState: state.gameState });
-        get().handleNavigation(state.gameState);
+      });
+
+      room.onMessage("navigate", (message: any) => {
+        console.log("Navigating to:", message);
+        get().handleNavigation(message);
       });
 
       room.onLeave(() => {

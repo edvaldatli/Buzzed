@@ -12,10 +12,8 @@ export default function QrCode({ data }: QrCodeProps) {
       <QRCode
         value={data}
         size={200}
-        backgroundColor="#000"
-        gradientDirection={["0", "1"]}
-        linearGradient={["#FF80C6", "#FD841F"]}
-        enableLinearGradient
+        backgroundColor="transparent"
+        color="black"
       />
     </View>
   );

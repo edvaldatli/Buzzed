@@ -1,10 +1,17 @@
 import PrimaryText from "@/components/primaryText";
 import { View, StyleSheet, Text } from "react-native";
 import AccentText from "@/components/accentText";
-import { LinearGradient } from "expo-linear-gradient";
 import BackgroundGradient from "@/components/backgroundGradient";
+import { useColyseusStore } from "@/context/ColyseusContext";
+import { useEffect } from "react";
 
 export default function IntroScreen() {
+  const { gameState } = useColyseusStore();
+
+  useEffect(() => {
+    console.log("gameState", gameState);
+  }, []);
+
   return (
     <View className="h-full w-full justify-center items-center p-12">
       <BackgroundGradient style={styles.background} />
