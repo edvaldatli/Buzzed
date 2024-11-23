@@ -11,16 +11,26 @@ export default function VotingResultScreen() {
   const [winner, setWinner] = useState<Player>();
 
   useEffect(() => {
-    const winnerid = rounds[rounds.length - 1].winner;
+    if (!rounds || rounds.length === 0) {
+      console.error("Rounds data is missing");
+      return;
+    }
 
-    const winner = players.find((player) => player.id === winnerid);
+    const currentRound = rounds[rounds.length - 1];
+    const winnerId = currentRound?.winner;
 
+    if (!winnerId) {
+      setWinner(undefined); // Tie scenario
+      return;
+    }
+
+    const winner = players.find((player) => player.id === winnerId);
     setWinner(winner);
     console.log(winner);
-  }, []);
+  }, [rounds, players]);
 
   return (
-    <View className="h-full w-full justify-around items-center p-12">
+    <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
 
       {winner ? (
@@ -60,5 +70,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 24,
   },
 });

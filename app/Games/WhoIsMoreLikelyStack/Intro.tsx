@@ -13,7 +13,7 @@ export default function IntroScreen() {
   }, []);
 
   return (
-    <View className="h-full w-full justify-center items-center p-12">
+    <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
       <View className="mb-20">
         <PrimaryText tlw="text-4xl text-center mb-8">
@@ -40,5 +40,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 24,
   },
 });

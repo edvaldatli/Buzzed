@@ -10,7 +10,8 @@ import { AnimatePresence, MotiView, useAnimationState } from "moti";
 import { Player } from "@/types/GameTypes";
 
 export default function VotingScreen() {
-  const { rounds, currentRoom, players, currentState } = useColyseusStore();
+  const { rounds, currentRoom, players, currentState, currentRoundIndex } =
+    useColyseusStore();
   const [winner, setWinner] = useState<Player | null>(null);
 
   const latestRound = rounds[rounds.length - 1];
@@ -81,8 +82,19 @@ export default function VotingScreen() {
     });
   }, [currentState]);
 
+  if (!rounds || !rounds[currentRoundIndex]) {
+    return (
+      <View style={styles.container}>
+        <BackgroundGradient style={styles.background} />
+        <PrimaryText tlw="text-4xl text-center text-white w-full">
+          Loading...
+        </PrimaryText>
+      </View>
+    );
+  }
+
   return (
-    <SafeAreaView className="h-full w-full justify-start items-center p-12">
+    <SafeAreaView style={styles.container}>
       <BackgroundGradient style={styles.background} />
       <Timer />
       <View className="mt-20">
@@ -175,5 +187,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 24,
   },
 });

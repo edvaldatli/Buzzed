@@ -13,8 +13,19 @@ export default function QuestionScreen() {
     console.log("currentRoundIndex", currentRoundIndex);
   }, []);
 
+  if (!rounds || !rounds[currentRoundIndex]) {
+    return (
+      <View style={styles.container}>
+        <BackgroundGradient style={styles.background} />
+        <PrimaryText tlw="text-4xl text-center text-white w-full">
+          Loading...
+        </PrimaryText>
+      </View>
+    );
+  }
+
   return (
-    <View className="h-full w-full justify-around items-center p-12">
+    <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
       {rounds && (
         <View className="shadow-xl w-full rounded-lg p-2 absolute">
@@ -43,5 +54,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 24,
   },
 });
