@@ -6,17 +6,12 @@ type DividerProps = {
 
 export default function Divider({ text }: DividerProps) {
   return (
-    <View className="flex flex-row justify-center items-center">
+    <View style={styles.container}>
       <View
         className="border-t-4 border-primaryPink w-2/5 shadow-lg "
         style={styles.buttonStyle}
       />
-      <Text
-        className="w-1/5 text-center self-center text-white"
-        style={{ fontFamily: "Rubik-BoldItalic" }}
-      >
-        {text}
-      </Text>
+      <Text style={styles.text}>{text}</Text>
       <View
         className="border-t-4 border-primaryPink w-2/5 shadow-lg "
         style={styles.buttonStyle}
@@ -34,5 +29,17 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 2.84,
+  },
+  container: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 18,
+    width: "100%",
+    fontFamily: "Rubik-BoldItalic",
   },
 });

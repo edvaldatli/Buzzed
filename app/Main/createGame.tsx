@@ -1,37 +1,31 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { useGameContext } from "@/context/GameContext"; // Import the context hook
-import { StackScreenProps } from "@react-navigation/stack";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
 import { MotiView } from "moti";
-import { useSignalRContext } from "@/context/SignalRContext";
+import { useColyseusStore } from "@/context/ColyseusContext"; // Import the Colyseus context
 
-type CreateGameScreen = StackScreenProps<RootStackParamList, "createGame">;
+type CreateGameScreen = NativeStackScreenProps<
+  RootStackParamList,
+  "createGame"
+>;
 
 export default function CreateGameScreen({
   route,
   navigation,
 }: CreateGameScreen) {
   const { name, image } = route.params;
-  const { gameId, players, gameStatus, setGameId, setPlayers, setGameStatus } =
-    useGameContext();
-
-  const { createGame } = useSignalRContext();
+  const { createRoom } = useColyseusStore();
 
   useEffect(() => {
     const createNewGame = async () => {
       try {
-        if (!image) {
-          throw new Error("Image is missing");
-        }
-        const message = JSON.stringify({ name, image });
-        const messageSize = new Blob([message]).size;
-        console.log("Message size: ", messageSize);
-        await createGame(name, image);
-        console.log("Game created successfully");
+        await createRoom(name, image!);
+
         navigation.navigate("lobby");
+        console.log("Game room created successfully");
       } catch (error) {
         console.log("Error creating game: ", error);
       }
@@ -40,14 +34,8 @@ export default function CreateGameScreen({
     createNewGame();
   }, []);
 
-  useEffect(() => {
-    console.log("Game ID: ", gameId);
-    console.log("Players: ", players);
-    console.log("Game Status: ", gameStatus);
-  }, [gameId, players, gameStatus]);
-
   return (
-    <View className="flex h-full w-full justify-center items-center">
+    <View style={styles.container}>
       <LinearGradient
         colors={["#E33EB0", "#FD841F"]}
         locations={[0.1, 0.5]}
@@ -59,10 +47,7 @@ export default function CreateGameScreen({
         transition={{ type: "spring", duration: 400 }}
         exit={{ opacity: 0 }}
       >
-        <View className="gap-y-20 px-16">
-          <PrimaryText tlw="text-4xl text-center">
-            Hold tight, we are creating a game for you
-          </PrimaryText>
+        <View style={styles.container}>
           <ActivityIndicator size="large" color="#E33EB0" />
         </View>
       </MotiView>
@@ -77,5 +62,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 40,
   },
 });
