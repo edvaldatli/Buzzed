@@ -9,9 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash.gif",
-      "resizeMode": "contain",
-      "backgroundColor": "#FD841F"
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain"
     },
     "ios": {
       "supportsTablet": true,
@@ -65,7 +64,11 @@
         {
           "cameraPermission": "Allow Buzzed to access your camera"
         }
-      ]
+      ],
+      ["expo-asset",
+    {
+      "assets": ["./assets/images/splash.png"]
+    }]
     ],
     "experiments": {
       "typedRoutes": true

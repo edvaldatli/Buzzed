@@ -35,7 +35,7 @@ export default function CreateGameScreen({
   }, []);
 
   return (
-    <View className="flex h-full w-full justify-center items-center">
+    <View style={styles.container}>
       <LinearGradient
         colors={["#E33EB0", "#FD841F"]}
         locations={[0.1, 0.5]}
@@ -47,10 +47,7 @@ export default function CreateGameScreen({
         transition={{ type: "spring", duration: 400 }}
         exit={{ opacity: 0 }}
       >
-        <View className="gap-y-20 px-16">
-          <PrimaryText tlw="text-4xl text-center">
-            Hold tight, we are creating a game for you
-          </PrimaryText>
+        <View style={styles.container}>
           <ActivityIndicator size="large" color="#E33EB0" />
         </View>
       </MotiView>
@@ -65,5 +62,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 40,
   },
 });

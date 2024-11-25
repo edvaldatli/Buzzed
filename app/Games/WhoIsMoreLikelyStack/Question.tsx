@@ -28,12 +28,12 @@ export default function QuestionScreen() {
     <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
       {rounds && (
-        <View className="shadow-xl w-full rounded-lg p-2 absolute">
+        <View>
           <PrimaryText tlw="text-3xl text-center flex-nowrap">
             Who is more likely to{" "}
           </PrimaryText>
           <View className="h-4" />
-          <PrimaryText tlw="text-5xl text-center text-white w-full">
+          <PrimaryText tlw="text-4xl text-center text-white w-full">
             {rounds[currentRoundIndex].question}
           </PrimaryText>
         </View>

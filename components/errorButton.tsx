@@ -1,3 +1,4 @@
+import { MotiView } from "moti";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type ErrorButtonProps = {
@@ -7,18 +8,16 @@ type ErrorButtonProps = {
 
 export default function ErrorButton({ text, handlePress }: ErrorButtonProps) {
   return (
-    <TouchableOpacity
-      className="flex justify-center items-center bg-error w-full h-14 rounded-full"
-      style={styles.buttonStyle}
-      onPress={handlePress}
+    <MotiView
+      from={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: "timing", duration: 200 }}
+      style={{ width: "100%" }}
     >
-      <Text
-        className="text-white text-2xl"
-        style={{ fontFamily: "Rubik-BoldItalic" }}
-      >
-        {text}
-      </Text>
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonStyle} onPress={handlePress}>
+        <Text style={styles.mainText}>{text}</Text>
+      </TouchableOpacity>
+    </MotiView>
   );
 }
 
@@ -29,7 +28,21 @@ const styles = StyleSheet.create({
       width: 0,
       height: 5,
     },
+    width: "100%",
+    height: 55,
+    flexDirection: "row",
     shadowOpacity: 0.3,
     shadowRadius: 5.84,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
+    borderRadius: 50,
+  },
+  mainText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 24,
+    width: "100%",
+    fontFamily: "Rubik-BoldItalic",
   },
 });

@@ -19,8 +19,9 @@ export default function VotingResultScreen() {
     const currentRound = rounds[rounds.length - 1];
     const winnerId = currentRound?.winner;
 
+    // tie
     if (!winnerId) {
-      setWinner(undefined); // Tie scenario
+      setWinner(undefined);
       return;
     }
 

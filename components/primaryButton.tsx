@@ -4,14 +4,14 @@ import { Text, StyleSheet, TouchableOpacity } from "react-native";
 type PositiveButtonProps = {
   text: string;
   handlePress?: () => void;
-  tlw?: string;
+  style?: string;
   disabled?: boolean;
 };
 
-export default function PositiveButton({
+export default function PrimaryButton({
   text,
   handlePress,
-  tlw,
+  style,
   disabled,
 }: PositiveButtonProps) {
   return (
@@ -19,20 +19,14 @@ export default function PositiveButton({
       from={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: "timing", duration: 200 }}
-      className="w-full"
+      style={{ width: "100%" }}
     >
       <TouchableOpacity
-        style={[styles.buttonStyle]}
-        className={`flex justify-center items-center bg-primaryPink w-full h-14 rounded-full shadow-md ${tlw}`}
+        style={styles.buttonStyle}
         onPress={handlePress}
         disabled={disabled}
       >
-        <Text
-          className="text-white text-2xl text-center w-full"
-          style={{ fontFamily: "Rubik-BoldItalic" }}
-        >
-          {text}
-        </Text>
+        <Text style={styles.mainText}>{text}</Text>
       </TouchableOpacity>
     </MotiView>
   );
@@ -45,7 +39,21 @@ const styles = StyleSheet.create({
       width: 0,
       height: 5,
     },
+    width: "100%",
+    height: 55,
+    flexDirection: "row",
     shadowOpacity: 0.3,
     shadowRadius: 5.84,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FF80C6",
+    borderRadius: 50,
+  },
+  mainText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 24,
+    width: "100%",
+    fontFamily: "Rubik-BoldItalic",
   },
 });

@@ -1,18 +1,17 @@
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import PositiveButton from "@/components/primaryButton";
+import PrimaryButton from "@/components/primaryButton";
 import PositiveText from "@/components/primaryText";
 import Divider from "@/components/divider";
 import { MotiView } from "moti";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useCustomFonts } from "@/hooks/useCustomFonts";
-import PrimaryText from "@/components/primaryText";
-import { Image } from "expo-image";
+import { Image, useImage } from "expo-image";
 import BackgroundGradient from "@/components/backgroundGradient";
+import ScrollingExamples from "@/components/scrollingExamples";
 
-type NavigationProp = NativeStackScreenProps<RootStackParamList>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "lobby">;
 
 export default function Index() {
   const navigation = useNavigation<NavigationProp>();
@@ -27,7 +26,7 @@ export default function Index() {
   }
 
   return (
-    <View className="flex justify-around items-center h-full p-12 ">
+    <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
       <MotiView
         from={{ scale: 0, opacity: 0 }}
@@ -45,22 +44,24 @@ export default function Index() {
           }}
         >
           <Image
-            source={require("@/assets/images/buzzedTitleText.png")}
-            className="w-64 h-32 object-contain"
-            style={{ resizeMode: "contain" }}
+            source={require("../../assets/images/splash.png")}
+            contentFit="contain"
+            style={{ width: 200, height: 200 }}
           />
         </MotiView>
       </MotiView>
+
+      <ScrollingExamples />
 
       <View className="flex flex-col justify-around h-48 w-full">
         <MotiView
           from={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ type: "spring", duration: 400 }}
-          className="flex gap-y-4"
+          style={{ gap: 10 }}
         >
           <View>
-            <PositiveButton
+            <PrimaryButton
               text="Join Game"
               handlePress={() =>
                 navigation.navigate("enterName", { type: "joinGame" })
@@ -71,7 +72,7 @@ export default function Index() {
             <Divider text="OR" />
           </View>
           <View>
-            <PositiveButton
+            <PrimaryButton
               text="Create Game"
               handlePress={() =>
                 navigation.navigate("enterName", { type: "createGame" })
@@ -91,5 +92,16 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 40,
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });

@@ -46,16 +46,18 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   setPlayers: (players: Player[]) => set(() => ({ players })),
   setConnected: (connected: boolean) => set(() => ({ connected })),
 
-  createRoom: async (playerName: string, avatarBase64: string) => {
+  createRoom: async (playerName: string, image: string) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.105:2567"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
+
+    console.log("Colyseus client - ImageBase64", image);
 
     try {
       const room = await client.create("GenericRoom", {
         name: playerName,
-        avatarFile: avatarBase64,
+        avatarFile: image,
       });
       set({ currentRoom: room, connected: true });
 
@@ -86,7 +88,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     avatarBase64: string
   ) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.105:2567"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
 
@@ -139,23 +141,23 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         navigation.replace("lobby");
         break;
       case "intro":
-        navigation.replace("WhoIsMoreLikelyStack", { screen: "intro" });
+        navigation.popTo("WhoIsMoreLikelyStack", { screen: "intro" });
         break;
       case "displaying_question":
-        navigation.replace("WhoIsMoreLikelyStack", { screen: "question" });
+        navigation.popTo("WhoIsMoreLikelyStack", { screen: "question" });
         break;
       case "round_in_progress":
-        navigation.replace("WhoIsMoreLikelyStack", { screen: "voting" });
+        navigation.popTo("WhoIsMoreLikelyStack", { screen: "voting" });
         break;
       case "displaying_results":
-        navigation.replace("WhoIsMoreLikelyStack", { screen: "votingResult" });
+        navigation.popTo("WhoIsMoreLikelyStack", { screen: "votingResult" });
         break;
       case "end_game_screen":
-        navigation.replace("WhoIsMoreLikelyStack", { screen: "result" });
+        navigation.popTo("WhoIsMoreLikelyStack", { screen: "result" });
         break;
       default:
         console.error("Unexpected game state:", gameState);
-        navigation.replace("error", {
+        navigation.popTo("error", {
           message: `Unexpected game state: ${gameState}`,
         });
     }

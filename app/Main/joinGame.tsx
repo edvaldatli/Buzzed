@@ -33,7 +33,7 @@ export default function JoinGameScreen({
     setDisabled(true);
     setLoading(true);
     try {
-      await joinRoom(data.data, name, image);
+      await joinRoom(data.data, name, image!);
       navigation.navigate("lobby");
     } catch (e) {
       setLoading(false);
@@ -52,7 +52,7 @@ export default function JoinGameScreen({
     return (
       <View
         className="flex h-full justify-center items-center p-12"
-        style={styles.background}
+        style={styles.container}
       >
         <BackgroundGradient style={styles.background} />
         <PrimaryText tlw="text-3xl text-center">Loading...</PrimaryText>
@@ -84,6 +84,7 @@ export default function JoinGameScreen({
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
     position: "absolute",
     left: 0,
     right: 0,

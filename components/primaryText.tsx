@@ -1,31 +1,24 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TextStyle } from "react-native";
 
-type PositiveTextProps = {
+type PrimaryTextProps = {
   children: string | string[];
-  tlw?: string;
+  style?: TextStyle | TextStyle[]; // Accept external styles
 };
 
-export default function PrimaryText({ children, tlw }: PositiveTextProps) {
-  return (
-    <Text
-      className={`text-7xl font-extrabold text-primaryPink shadow-lg ${
-        tlw || ""
-      }`}
-      style={{ ...styles.textStyle, fontFamily: "Rubik-BoldItalic" }}
-    >
-      {children}
-    </Text>
-  );
+export default function PrimaryText({ children, style }: PrimaryTextProps) {
+  return <Text style={[styles.textStyle, style]}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
   textStyle: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 2.84,
+    flexDirection: "row",
+    fontSize: 52,
+    color: "#FF80C6",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 5 },
+    textShadowRadius: 5,
+    width: "100%",
+    textAlign: "center",
+    fontFamily: "Rubik-BoldItalic",
   },
 });

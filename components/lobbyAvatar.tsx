@@ -4,21 +4,19 @@ import PrimaryText from "./primaryText";
 import { Image } from "expo-image";
 import { useEffect } from "react";
 import { MotiView } from "moti";
+import { StyleSheet } from "react-native";
 
 type LobbyAvatarProps = {
   player: Player;
 };
 
 export default function LobbyAvatar({ player }: LobbyAvatarProps) {
-  useEffect(() => {
-    console.log("Player: ", player);
-  }, [player]);
   return (
     <MotiView
-      className="flex flex-row items-center"
-      from={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ type: "timing", duration: 200 }}
+      from={{ translateX: -400 }}
+      animate={{ translateX: 0 }}
+      transition={{ type: "spring", duration: 1600 }}
+      style={styles.container}
     >
       <Image
         source={
@@ -26,10 +24,36 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
             ? require("../assets/images/avatar-placeholder.png")
             : player.avatar
         }
-        className="w-14 h-14 rounded-full border-green-500 border-4"
+        style={styles.avatar}
+        transition={{ duration: 800, effect: "cross-dissolve" }}
       />
-      <View className="w-3" />
-      <PrimaryText tlw="text-3xl text-white">{player.name}</PrimaryText>
+      <PrimaryText style={styles.text}>{player.name}</PrimaryText>
     </MotiView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignContent: "center",
+    gap: 5,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: "lightgreen",
+  },
+  text: {
+    textAlign: "left",
+    fontSize: 32,
+    alignSelf: "center",
+    padding: 10,
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    color: "#fff",
+  },
+});
