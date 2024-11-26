@@ -1,6 +1,6 @@
 // TODO: Remove Tailwind and implement stylesheet
 
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import PrimaryText from "./primaryText";
 import { useState, useRef, useEffect } from "react";
 
@@ -31,20 +31,45 @@ export default function Timer() {
   const timerWidthPercentage = (timer / duration) * 33;
 
   return (
-    <View className="flex justify-start items-center absolute top-20 w-full">
-      <PrimaryText tlw="text-8xl text-center text-white absolute ">
+    <View style={styles.timer}>
+      <PrimaryText style={styles.timerText}>
         {Math.floor(timer / 1000).toString()}{" "}
       </PrimaryText>
-      <View className="w-full flex flex-row justify-between absolute top-8">
+      <View style={styles.timerBarContainer}>
         <View
-          className="h-1 bg-white"
-          style={{ width: `${timerWidthPercentage}%` }}
+          style={[{ width: `${timerWidthPercentage}%` }, styles.timerBar]}
         />
         <View
-          className="h-1 bg-white"
-          style={{ width: `${timerWidthPercentage}%` }}
+          style={[{ width: `${timerWidthPercentage}%` }, styles.timerBar]}
         />
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  timer: {
+    position: "absolute",
+    top: 90,
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  timerText: {
+    position: "absolute",
+    fontSize: 96,
+    color: "#fff",
+    textAlign: "center",
+  },
+  timerBarContainer: {
+    width: "100%",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  timerBar: {
+    height: 5,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+  },
+});

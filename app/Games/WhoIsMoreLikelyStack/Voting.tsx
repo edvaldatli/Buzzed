@@ -97,7 +97,7 @@ export default function VotingScreen() {
     <SafeAreaView style={styles.container}>
       <BackgroundGradient style={styles.background} />
       <Timer />
-      <View className="mt-20">
+      <View>
         <PrimaryText tlw="text-2xl text-center">
           Who is more likely to
         </PrimaryText>
@@ -194,5 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     padding: 24,
+    paddingVertical: 48,
   },
 });

@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/avatar-placeholder.png",
       "resizeMode": "contain"
     },
     "ios": {
@@ -23,8 +23,11 @@
       },
       "permissions": [
         "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.FrostFallStudios.Buzzed"
     },
     "web": {
       "bundler": "metro",
@@ -64,11 +67,7 @@
         {
           "cameraPermission": "Allow Buzzed to access your camera"
         }
-      ],
-      ["expo-asset",
-    {
-      "assets": ["./assets/images/splash.png"]
-    }]
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -68,7 +68,7 @@ export default function Index() {
               }
             />
           </View>
-          <View>
+          <View style={{ width: "100%" }}>
             <Divider text="OR" />
           </View>
           <View>

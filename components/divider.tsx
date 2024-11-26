@@ -7,15 +7,9 @@ type DividerProps = {
 export default function Divider({ text }: DividerProps) {
   return (
     <View style={styles.container}>
-      <View
-        className="border-t-4 border-primaryPink w-2/5 shadow-lg "
-        style={styles.buttonStyle}
-      />
+      <View style={styles.lineDivider} />
       <Text style={styles.text}>{text}</Text>
-      <View
-        className="border-t-4 border-primaryPink w-2/5 shadow-lg "
-        style={styles.buttonStyle}
-      />
+      <View style={styles.lineDivider} />
     </View>
   );
 }
@@ -39,7 +33,22 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontSize: 18,
-    width: "100%",
+    paddingHorizontal: 15,
     fontFamily: "Rubik-BoldItalic",
+  },
+  lineDivider: {
+    position: "relative",
+    height: 1,
+    width: "40%",
+    borderTopWidth: 1,
+    borderColor: "#FF80C6",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2.84,
   },
 });

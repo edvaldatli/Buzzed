@@ -9,7 +9,7 @@ export default function BackgroundGradient({ style }: BackgroundGradientProps) {
   return (
     <LinearGradient
       colors={["#E33EB0", "#FD841F"]}
-      locations={[0, 1]}
+      locations={[0.4, 1]}
       style={style}
     />
   );
