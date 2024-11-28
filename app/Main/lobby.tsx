@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
@@ -12,16 +12,20 @@ import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
-import QrCode from "@/components/qrCode";
-import QRCodeModal from "@/components/QrCodeModal";
-import FlipPhoneIcon from "@/components/flipPhoneIcon";
 import BackgroundGradient from "@/components/backgroundGradient";
+import useHaptics from "@/hooks/useHaptics";
+import AnimateNavigation, {
+  AnimateNavigationHandle,
+} from "@/components/animateNavigation";
 
 type LobbyScreenProps = NativeStackScreenProps<RootStackParamList, "lobby">;
 
 export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
+  const { notification } = useHaptics();
   const [userId, setUserId] = useState<string>("");
+
+  const animateNavRef = useRef<AnimateNavigationHandle>(null);
 
   const setNavigation = useColyseusStore((state) => state.setNavigation);
 
@@ -37,17 +41,23 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
     }
   }, [currentRoom]);
 
+  useEffect(() => {
+    const vibrateOnPlayerJoin = async () => {
+      await notification();
+    };
+    vibrateOnPlayerJoin();
+  }, [players]);
+
   const handleLeave = () => {
     disconnect();
     navigation.popToTop();
   };
 
   const handleStartGame = () => {
-    currentRoom?.send("startGame");
-  };
-
-  const votePlayer = (playerVoted: any) => {
-    currentRoom?.send("votePlayer", playerVoted);
+    animateNavRef.current?.triggerAnimation();
+    setTimeout(() => {
+      currentRoom?.send("startGame");
+    }, 5000);
   };
 
   if (!currentRoom) {
@@ -93,9 +103,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           <View style={styles.playersContainer}>
             {players.map((player) => (
               <View key={player.id} style={styles.playerWrapper}>
-                <TouchableOpacity onPress={() => votePlayer(player)}>
-                  <LobbyAvatar player={player} />
-                </TouchableOpacity>
+                <LobbyAvatar player={player} />
                 <View style={styles.spacer} />
               </View>
             ))}
@@ -131,6 +139,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           </View>
         </View>
       </SafeAreaView>
+      <AnimateNavigation ref={animateNavRef} timeMs={5000}>
+        <PrimaryText style={styles.exitNameText}>Eddi The King</PrimaryText>
+        <PrimaryText style={styles.exitText}>Test</PrimaryText>
+      </AnimateNavigation>
     </>
   );
 }

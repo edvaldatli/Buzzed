@@ -9,10 +9,13 @@ interface ColyseusState {
   gameState: Object | null;
   currentState: string;
   currentRoundIndex: number;
-  rounds: any[]; // Ensure rounds are always initialized
+  rounds: any[];
   players: any[];
   connected: boolean;
   navigation: NativeStackNavigationProp<any> | null;
+  sessionId: string | null;
+  roomId: string | null;
+  setSessionInfo: (sessionId: string, roomId: string) => void;
   setClient: (client: Colyseus.Client) => void;
   setCurrentRoom: (room: Colyseus.Room | null) => void;
   setPlayers: (players: Player[]) => void;
@@ -25,6 +28,7 @@ interface ColyseusState {
     avatarBase64: string
   ) => Promise<void>;
   disconnect: () => void;
+  reconnect: () => void;
   handleNavigation: (gameState: string) => void;
 }
 
@@ -38,8 +42,10 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   currentState: "",
   rounds: [], // Initialize as an empty array to avoid undefined errors
   navigation: null,
+  sessionId: null,
+  roomId: null,
+  setSessionInfo: (sessionId, roomId) => set({ sessionId, roomId }),
   setNavigation: (navigation) => set({ navigation }),
-
   setClient: (client: Colyseus.Client) => set(() => ({ client })),
   setCurrentRoom: (room: Colyseus.Room | null) =>
     set(() => ({ currentRoom: room })),
@@ -48,18 +54,21 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
   createRoom: async (playerName: string, image: string) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
+      process.env.WEBSOCKET_URL || "ws:192.168.50.230:2567"
     );
     set({ client });
-
-    console.log("Colyseus client - ImageBase64", image);
 
     try {
       const room = await client.create("GenericRoom", {
         name: playerName,
         avatarFile: image,
       });
-      set({ currentRoom: room, connected: true });
+      set({
+        currentRoom: room,
+        connected: true,
+        sessionId: room.sessionId,
+        roomId: room.id,
+      });
 
       room.onStateChange((state: any) => {
         set({
@@ -75,6 +84,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
 
       room.onLeave(() => {
+        get().reconnect();
         set({ connected: false, currentRoom: null, players: [] });
       });
     } catch (error) {
@@ -88,7 +98,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     avatarBase64: string
   ) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
+      process.env.WEBSOCKET_URL || "ws:192.168.50.230:2567"
     );
     set({ client });
 
@@ -97,7 +107,12 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         name: playerName,
         avatarFile: avatarBase64,
       });
-      set({ currentRoom: room, connected: true });
+      set({
+        currentRoom: room,
+        connected: true,
+        sessionId: room.sessionId,
+        roomId: room.id,
+      });
 
       room.onStateChange((state: any) => {
         set({
@@ -122,11 +137,55 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     }
   },
 
+  reconnect: async () => {
+    const {
+      client,
+      roomId,
+      sessionId,
+      currentRoom,
+      setCurrentRoom,
+      setConnected,
+    } = get();
+    if (!client || !roomId || !sessionId) {
+      console.error("Cannot reconnect: missing client, roomId, or sessionId.");
+      return;
+    }
+
+    try {
+      console.log("Attempting to reconnect...");
+      console.log("Reconnection token:", currentRoom?.reconnectionToken);
+      const room = await client.reconnect(currentRoom?.reconnectionToken || "");
+
+      setCurrentRoom(room);
+      setConnected(true);
+
+      room.onStateChange((state: any) => {
+        set({
+          currentRoundIndex: state.currentRoundIndex,
+          players: [...state.players],
+          gameState: state,
+          rounds: [...(state.rounds || [])],
+        });
+      });
+
+      room.onMessage("navigate", (message: any) => {
+        get().handleNavigation(message);
+      });
+
+      room.onLeave(() => {
+        set({ connected: false, currentRoom: null, players: [] });
+      });
+
+      console.log("Reconnected successfully!");
+    } catch (error) {
+      console.error("Reconnection failed:", error);
+    }
+  },
+
   disconnect: () => {
     const { currentRoom } = get();
     if (currentRoom) {
       currentRoom.leave();
-      set({ connected: false, currentRoom: null, players: [] });
     }
   },
 

@@ -1,16 +1,20 @@
 {
   "expo": {
     "name": "Buzzed",
+    "discription": "A social media app for the modern age",
+    "sdkVersion": "52.0.0",
     "slug": "Buzzed",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appstore.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "backgroundColor": "#FF80C6",
     "splash": {
-      "image": "./assets/images/avatar-placeholder.png",
-      "resizeMode": "contain"
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FF80C6"
     },
     "ios": {
       "supportsTablet": true,
@@ -18,12 +22,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/splash.png",
+        "backgroundColor": "#FF80C6"
       },
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
@@ -32,7 +34,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/appstore.png"
     },
     "plugins": [
       "expo-router",

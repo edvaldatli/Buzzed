@@ -23,19 +23,16 @@ export default function ErrorButton({ text, handlePress }: ErrorButtonProps) {
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
     width: "100%",
     height: 55,
     flexDirection: "row",
-    shadowOpacity: 0.3,
-    shadowRadius: 5.84,
+    shadowRadius: 2,
+    shadowOpacity: 0.25,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 3 },
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red",
+    backgroundColor: "#FE3639",
     borderRadius: 50,
   },
   mainText: {
@@ -43,6 +40,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     width: "100%",
-    fontFamily: "Rubik-BoldItalic",
+    fontFamily: "Rubik-MediumItalic",
   },
 });

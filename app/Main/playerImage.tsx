@@ -48,8 +48,6 @@ export default function PlayerImage({
 
       if (photo?.base64) {
         const imageBase64 = photo.base64;
-        console.log("Image captured");
-        console.log("Image base64", imageBase64);
 
         navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
           name: name,

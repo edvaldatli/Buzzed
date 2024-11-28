@@ -22,11 +22,13 @@ export default function PrimaryButton({
       style={{ width: "100%" }}
     >
       <TouchableOpacity
-        style={styles.buttonStyle}
+        style={disabled ? styles.disabledButtonStyle : styles.buttonStyle}
         onPress={handlePress}
         disabled={disabled}
       >
-        <Text style={styles.mainText}>{text}</Text>
+        <Text style={disabled ? styles.disabledMainText : styles.mainText}>
+          {text}
+        </Text>
       </TouchableOpacity>
     </MotiView>
   );
@@ -34,19 +36,29 @@ export default function PrimaryButton({
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
     width: "100%",
     height: 55,
     flexDirection: "row",
-    shadowOpacity: 0.3,
-    shadowRadius: 5.84,
+    shadowRadius: 2,
+    shadowOpacity: 0.25,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 3 },
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FF80C6",
+    borderRadius: 50,
+  },
+  disabledButtonStyle: {
+    width: "100%",
+    height: 55,
+    flexDirection: "row",
+    shadowRadius: 2,
+    shadowOpacity: 0.25,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 3 },
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#7B7B7B",
     borderRadius: 50,
   },
   mainText: {
@@ -54,6 +66,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     width: "100%",
-    fontFamily: "Rubik-BoldItalic",
+    fontFamily: "Rubik-MediumItalic",
+  },
+  disabledMainText: {
+    color: "#C6C6C6",
+    textAlign: "center",
+    fontSize: 24,
+    width: "100%",
+    fontFamily: "Rubik-MediumItalic",
   },
 });
