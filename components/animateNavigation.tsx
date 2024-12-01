@@ -1,9 +1,4 @@
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useEffect,
-  useState,
-} from "react";
+import React, { forwardRef, useImperativeHandle, useEffect } from "react";
 import { MotiView, useAnimationState } from "moti";
 import { StyleSheet } from "react-native";
 
@@ -36,32 +31,24 @@ const AnimateNavigation = forwardRef<
     then: { opacity: 1, translateY: 100 },
   });
 
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    exitAnimation.transitionTo("start");
-    enterTextAnimation.transitionTo("start");
-    enterTextAnimation2.transitionTo("start");
-    setIsMounted(true);
-  }, []);
-
   const triggerAnimation = () => {
-    if (!isMounted) return;
     console.log("Triggering animation");
 
     exitAnimation.transitionTo("then");
+
     setTimeout(() => {
       enterTextAnimation.transitionTo("then");
     }, 200);
+
     setTimeout(() => {
       enterTextAnimation2.transitionTo("then");
     }, 400);
-    console.log(typeof navigateTo);
+
     setTimeout(() => {
       if (typeof navigateTo === "function") {
         navigateTo();
       } else {
-        console.log("No navigateTo function provided");
+        console.warn("No navigateTo function provided");
       }
       resetAnimations();
     }, timeMs);
@@ -76,6 +63,10 @@ const AnimateNavigation = forwardRef<
   useImperativeHandle(ref, () => ({
     triggerAnimation,
   }));
+
+  useEffect(() => {
+    resetAnimations();
+  }, []);
 
   return (
     <>
@@ -117,13 +108,5 @@ const styles = StyleSheet.create({
     left: -20,
     width: 2,
     height: 2,
-  },
-  exitText: {
-    width: "100%",
-    textAlign: "center",
-    color: "#fff",
-    fontSize: 30,
-    fontFamily: "Rubik-BoldItalic",
-    paddingHorizontal: 40,
   },
 });

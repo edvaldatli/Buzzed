@@ -30,12 +30,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const setNavigation = useColyseusStore((state) => state.setNavigation);
 
   useEffect(() => {
-    setNavigation(navigation);
-  }, [navigation]);
-
-  useEffect(() => {
+    console.log("StartGame listener");
     if (!currentRoom) return;
     currentRoom.onMessage("startGame", (data) => {
+      console.log("StartGame message received", data);
       if (animateNavRef.current) {
         animateNavRef.current.triggerAnimation();
       }
@@ -57,16 +55,14 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   };
 
   const handleStartGame = () => {
-    setTimeout(() => {
-      currentRoom?.send("startGame");
-    }, 5000);
+    currentRoom?.send("startGame");
   };
 
   if (!currentRoom) {
     return (
       <View style={styles.loadingContainer}>
         <BackgroundGradient style={styles.background} />
-        <PrimaryText tlw="text-4xl text-center">Loading...</PrimaryText>
+        <PrimaryText>Loading...</PrimaryText>
         <ActivityIndicator />
       </View>
     );
@@ -100,7 +96,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           style={styles.openModalButton}
         />
         <View style={styles.container}>
-          <PrimaryText tlw="text-6xl text-center">The crew</PrimaryText>
+          <PrimaryText>The crew</PrimaryText>
           <View style={styles.spacer} />
           <View style={styles.playersContainer}>
             {players.map((player) => (
@@ -125,7 +121,6 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
                   <PrimaryButton
                     text="Waiting for players"
                     handlePress={handleStartGame}
-                    tlw="bg-gray-400"
                     disabled
                   />
                   <View style={styles.spacerLarge} />
@@ -136,14 +131,18 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
                 Waiting on the homie with the crown
               </Text>
             )}
-            <View className="h-4" />
             <ErrorButton text="Leave" handlePress={handleLeave} />
           </View>
         </View>
       </SafeAreaView>
-      <AnimateNavigation ref={animateNavRef} timeMs={5000}>
-        <PrimaryText style={styles.exitNameText}>Eddi The King</PrimaryText>
-        <PrimaryText style={styles.exitText}>Test</PrimaryText>
+      <AnimateNavigation
+        ref={animateNavRef}
+        timeMs={5000}
+        navigateTo={() => {
+          setNavigation(navigation);
+        }}
+      >
+        <PrimaryText style={{ color: "white" }}>Eddi The King</PrimaryText>
       </AnimateNavigation>
     </>
   );

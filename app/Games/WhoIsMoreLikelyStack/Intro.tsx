@@ -8,15 +8,13 @@ export default function IntroScreen() {
     <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
       <View className="mb-20">
-        <PrimaryText tlw="text-4xl text-center mb-8">
-          Get ready for...
-        </PrimaryText>
+        <PrimaryText>Get ready for...</PrimaryText>
         <AccentText tlw="text-6xl text-center text-accentPurple">
           Most Likely
         </AccentText>
       </View>
       <View className="flex flex-row justify-center items-center bg-accentPurple bg-opacity-25 rounded-xl p-8 border border-white">
-        <PrimaryText tlw="text-2xl text-center text-white">
+        <PrimaryText>
           Each round, two players will be put head to head. The group will
           decide who is more likely...
         </PrimaryText>

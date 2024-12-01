@@ -1,6 +1,7 @@
 export type RootStackParamList = {
   // Main navigation stack
-  index: undefined;
+  app: undefined;
+  home: undefined;
   joinGame: { name: string; image: string | null };
   createGame: { name: string; image: string | null };
   enterName: { type: "createGame" | "joinGame" };

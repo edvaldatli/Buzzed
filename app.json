@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Buzzed",
-    "discription": "A social media app for the modern age",
+    "description": "A social media app for the modern age",
     "sdkVersion": "52.0.0",
     "slug": "Buzzed",
     "version": "1.0.2",
@@ -11,11 +11,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "backgroundColor": "#FF80C6",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FF80C6"
-    },
+    "entryPoint": "expo-router/entry",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.FrostFallStudios.Buzzed"

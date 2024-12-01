@@ -1,5 +1,4 @@
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 
 export function useCustomFonts() {
@@ -26,16 +25,5 @@ export function useCustomFonts() {
     "Signika-Medium": require("@/assets/fonts/Signika/SignikaNegative-Medium.ttf"),
   });
 
-  const [isFontLoaded, setIsFontLoaded] = useState(false);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-      setIsFontLoaded(true);
-    } else {
-      SplashScreen.preventAutoHideAsync();
-    }
-  }, [loaded]);
-
-  return [isFontLoaded, error];
+  return [loaded, error];
 }
