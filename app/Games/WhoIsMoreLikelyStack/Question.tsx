@@ -1,7 +1,6 @@
 import BackgroundGradient from "@/components/backgroundGradient";
 import PrimaryText from "@/components/primaryText";
 import { useColyseusStore } from "@/context/ColyseusContext";
-import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 

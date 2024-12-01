@@ -34,11 +34,14 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   }, [navigation]);
 
   useEffect(() => {
-    if (currentRoom) {
-      setUserId(currentRoom.sessionId);
-    } else if (!currentRoom) {
-      navigation.navigate("index");
-    }
+    if (!currentRoom) return;
+    currentRoom.onMessage("startGame", (data) => {
+      if (animateNavRef.current) {
+        animateNavRef.current.triggerAnimation();
+      }
+    });
+
+    setUserId(currentRoom.sessionId);
   }, [currentRoom]);
 
   useEffect(() => {
@@ -54,7 +57,6 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   };
 
   const handleStartGame = () => {
-    animateNavRef.current?.triggerAnimation();
     setTimeout(() => {
       currentRoom?.send("startGame");
     }, 5000);

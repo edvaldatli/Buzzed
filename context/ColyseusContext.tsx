@@ -83,6 +83,11 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         get().handleNavigation(message);
       });
 
+      room.onMessage("startGame", (message: any) => {
+        console.log("Starting game...");
+        get().handleNavigation("intro");
+      });
+
       room.onLeave(() => {
         get().reconnect();
         set({ connected: false, currentRoom: null, players: [] });

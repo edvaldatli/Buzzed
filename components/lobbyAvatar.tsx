@@ -24,7 +24,7 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
             ? require("../assets/images/avatar-placeholder.png")
             : player.avatar
         }
-        style={styles.avatar}
+        style={[styles.avatar, { borderColor: player.color }]}
         transition={{ duration: 800, effect: "cross-dissolve" }}
       />
       <PrimaryText style={styles.text}>{player.name}</PrimaryText>
@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: "lightgreen",
   },
   text: {
     textAlign: "left",
