@@ -5,10 +5,12 @@ import { Image } from "expo-image";
 import BackgroundGradient from "@/components/backgroundGradient";
 import { useEffect, useState } from "react";
 import { Player } from "@/types/GameTypes";
+import DisplayAvatar from "@/components/displayAvatar";
 
 export default function VotingResultScreen() {
   const { rounds, players } = useColyseusStore();
   const [winner, setWinner] = useState<Player>();
+  const [currentRound, setCurrentRound] = useState<any>();
 
   useEffect(() => {
     if (!rounds || rounds.length === 0) {
@@ -17,6 +19,8 @@ export default function VotingResultScreen() {
     }
 
     const currentRound = rounds[rounds.length - 1];
+    setCurrentRound(currentRound);
+
     const winnerId = currentRound?.winner;
 
     // tie
@@ -36,20 +40,9 @@ export default function VotingResultScreen() {
 
       {winner ? (
         <>
-          <PrimaryText tlw="text-5xl text-center">
-            Smells like a winner
-          </PrimaryText>
-          <View className="flex justify-center items-center bg-white shadow-lg p-4 rounded-lg">
-            <Image
-              source={
-                winner?.avatar == "default-avatar-url"
-                  ? require("../../../assets/images/avatar-placeholder.png")
-                  : winner?.avatar
-              }
-              className="w-20 h-20 rounded-full border-green-500 border-4"
-            />
-            <PrimaryText>{winner.name}</PrimaryText>
-          </View>
+          <PrimaryText>Who is more likely to</PrimaryText>
+          <PrimaryText>{currentRound?.question}</PrimaryText>
+          <DisplayAvatar player={winner} />
         </>
       ) : (
         <>

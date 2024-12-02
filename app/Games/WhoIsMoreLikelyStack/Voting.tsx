@@ -1,52 +1,33 @@
+import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { MotiView, useAnimationState } from "moti";
 import BackgroundGradient from "@/components/backgroundGradient";
 import PrimaryText from "@/components/primaryText";
 import Timer from "@/components/timer";
 import { useColyseusStore } from "@/context/ColyseusContext";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
-import { useEffect, useState } from "react";
-import { AnimatePresence, MotiView, useAnimationState } from "moti";
-import { Player } from "@/types/GameTypes";
 import DisplayAvatar from "@/components/displayAvatar";
+import { Player } from "@/types/GameTypes";
 
 export default function VotingScreen() {
-  const { rounds, currentRoom, players, currentState, currentRoundIndex } =
-    useColyseusStore();
-  const [winner, setWinner] = useState<Player | null>(null);
-
+  const { rounds, currentRoom, currentRoundIndex } = useColyseusStore();
   const latestRound = rounds[rounds.length - 1];
   const [firstPlayer, secondPlayer] = latestRound?.battlingPlayers || [];
   const [voted, setVoted] = useState(false);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
 
   const firstPlayerAnimation = useAnimationState({
     idle: { scale: 1 },
-    clicked: { scale: 1.2 },
-    minimize: { opacity: 0.8, scale: 0.8, transition: { duration: 0.5 } },
+    clicked: { scale: 1.05 },
+    minimize: { opacity: 0.95, scale: 0.95, transition: { duration: 0.5 } },
     hide: { opacity: 0, scale: 0.8 },
-  });
-  const secondPlayerAnimation = useAnimationState({
-    idle: { scale: 1 },
-    clicked: { scale: 1.2 },
-    minimize: { opacity: 0.8, scale: 0.8, transition: { duration: 0.5 } },
-    hide: { opacity: 0, scale: 0.8 },
-  });
-  const orTextAnimation = useAnimationState({
-    idle: { scale: 1 },
-    hide: { opacity: 0, scale: 0.8 },
-  });
-  const winnerAnimation = useAnimationState({
-    hidden: { opacity: 0, scale: 0.5 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 1, type: "spring" },
-    },
   });
 
-  const exitAnimation = useAnimationState({
-    from: { scale: 2000 },
-    to: { scale: 0 },
+  const secondPlayerAnimation = useAnimationState({
+    idle: { scale: 1 },
+    clicked: { scale: 1.05 },
+    minimize: { opacity: 0.95, scale: 0.95, transition: { duration: 0.5 } },
+    hide: { opacity: 0, scale: 0.8 },
   });
 
   const votePlayer = (playerId: string) => {
@@ -59,8 +40,8 @@ export default function VotingScreen() {
       secondPlayerAnimation.transitionTo("clicked");
       firstPlayerAnimation.transitionTo("minimize");
     }
-    orTextAnimation.transitionTo("hide");
 
+    setSelectedPlayerId(playerId);
     currentRoom?.send("votePlayer", playerId);
     setVoted(true);
   };
@@ -69,9 +50,7 @@ export default function VotingScreen() {
     return (
       <View style={styles.container}>
         <BackgroundGradient style={styles.background} />
-        <PrimaryText tlw="text-4xl text-center text-white w-full">
-          Loading...
-        </PrimaryText>
+        <PrimaryText>Loading...</PrimaryText>
       </View>
     );
   }
@@ -86,7 +65,7 @@ export default function VotingScreen() {
             Who is more likely to
           </PrimaryText>
           <PrimaryText style={styles.questionText}>
-            {rounds[rounds.length - 1].question}
+            {latestRound.question}
           </PrimaryText>
         </View>
 
@@ -98,7 +77,10 @@ export default function VotingScreen() {
             >
               <MotiView
                 state={firstPlayerAnimation}
-                style={styles.votePlayerContainer}
+                style={[
+                  styles.votePlayerContainer,
+                  selectedPlayerId === firstPlayer.id && styles.selectedButton,
+                ]}
               >
                 <DisplayAvatar player={firstPlayer} />
                 <PrimaryText style={styles.playerText}>
@@ -107,12 +89,6 @@ export default function VotingScreen() {
               </MotiView>
             </TouchableOpacity>
           )}
-          <MotiView
-            state={orTextAnimation}
-            style={{ justifyContent: "center" }}
-          >
-            <PrimaryText>OR</PrimaryText>
-          </MotiView>
           {secondPlayer && (
             <TouchableOpacity
               onPress={() => votePlayer(secondPlayer.id)}
@@ -120,7 +96,10 @@ export default function VotingScreen() {
             >
               <MotiView
                 state={secondPlayerAnimation}
-                style={styles.votePlayerContainer}
+                style={[
+                  styles.votePlayerContainer,
+                  selectedPlayerId === secondPlayer.id && styles.selectedButton,
+                ]}
               >
                 <DisplayAvatar player={secondPlayer} />
                 <PrimaryText style={styles.playerText}>
@@ -131,14 +110,6 @@ export default function VotingScreen() {
           )}
         </View>
       </SafeAreaView>
-      <MotiView
-        state={exitAnimation}
-        transition={{
-          type: "timing",
-          duration: 800,
-        }}
-        style={styles.exitAnimationStyle}
-      />
     </>
   );
 }
@@ -157,17 +128,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 24,
   },
-  exitAnimationStyle: {
-    position: "absolute",
-    backgroundColor: "#FF69B4",
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    top: 0,
-    left: -20,
-    width: 2,
-    height: 2,
-  },
   questionContainer: {
     width: "100%",
     padding: 10,
@@ -176,13 +136,12 @@ const styles = StyleSheet.create({
     paddingVertical: 120,
   },
   defaultText: {
-    color: "#fff",
-    fontSize: 24,
+    fontSize: 36,
     textAlign: "center",
   },
   questionText: {
     color: "#fff",
-    fontSize: 42,
+    fontSize: 60,
     textAlign: "center",
   },
   buttonContainer: {
@@ -192,6 +151,19 @@ const styles = StyleSheet.create({
   },
   votePlayerContainer: {
     gap: 10,
+    backgroundColor: "rgba(137, 47, 48, 0.6)",
+    padding: 25,
+    borderRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 2,
+      height: 3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+  },
+  selectedButton: {
+    backgroundColor: "rgba(56, 255, 56, 0.6)",
   },
   playerText: {
     color: "#fff",

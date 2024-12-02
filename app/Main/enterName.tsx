@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     textShadowColor: "gold",
     textShadowOffset: { width: 0, height: 5 },
     textShadowRadius: 5,
+    shadowOpacity: 0,
     paddingHorizontal: 20,
     paddingVertical: 20,
   },

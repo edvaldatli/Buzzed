@@ -6,6 +6,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import PrimaryText from "@/components/primaryText";
 import { MotiView } from "moti";
 import { useColyseusStore } from "@/context/ColyseusContext"; // Import the Colyseus context
+import { Background } from "@react-navigation/elements";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type CreateGameScreen = NativeStackScreenProps<
   RootStackParamList,
@@ -36,11 +38,7 @@ export default function CreateGameScreen({
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={["#E33EB0", "#FD841F"]}
-        locations={[0.1, 0.5]}
-        style={styles.background}
-      />
+      <BackgroundGradient style={styles.background} />
       <MotiView
         from={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

@@ -6,16 +6,12 @@
     "slug": "Buzzed",
     "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/appstore.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "backgroundColor": "#FF80C6",
     "entryPoint": "expo-router/entry",
-    "splash": {
-      "image": "./assets/BUZZEDSPLASHTEST.png",
-      "resizeMode": "cover"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.FrostFallStudios.Buzzed"

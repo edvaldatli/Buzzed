@@ -76,7 +76,7 @@ export default function JoinGameScreen({
       <QRCodeScanner onScan={(data) => handleScan(data)} />
       <ErrorButton
         text="Cancel"
-        handlePress={() => navigation.navigate("index")}
+        handlePress={() => navigation.navigate("home")}
       />
     </MotiView>
   );

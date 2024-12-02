@@ -58,8 +58,8 @@ export default function App() {
 
   return (
     <>
-      <BackgroundGradient style={styles.background} />
       <View style={styles.container} onLayout={onLayoutRootView}>
+        <BackgroundGradient style={styles.background} />
         <AnimateNavigation
           timeMs={4000}
           navigateTo={() => navigation.navigate("home")}

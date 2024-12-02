@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,16 +5,16 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AnimateNavigation, {
+  AnimateNavigationHandle,
+} from "@/components/animateNavigation";
+import useHaptics from "@/hooks/useHaptics";
 
 import PrimaryText from "@/components/primaryText";
 import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
 import BackgroundGradient from "@/components/backgroundGradient";
-import useHaptics from "@/hooks/useHaptics";
-import AnimateNavigation, {
-  AnimateNavigationHandle,
-} from "@/components/animateNavigation";
 
 type LobbyScreenProps = NativeStackScreenProps<RootStackParamList, "lobby">;
 
@@ -54,7 +53,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
 
   const handleLeave = () => {
     disconnect();
-    navigation.popToTop();
+    navigation.popTo("home");
   };
 
   const handleStartGame = () => {
@@ -84,11 +83,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <LinearGradient
-          colors={["#E33EB0", "#FD841F"]}
-          locations={[0.1, 0.5]}
-          style={styles.background}
-        />
+        <BackgroundGradient style={styles.background} />
         <MaterialCommunityIcons
           name="qrcode-scan"
           size={40}
