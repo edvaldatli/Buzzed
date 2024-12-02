@@ -68,7 +68,6 @@ export default function EnterNameScreen({
       storeName(name);
       inputRef.current?.blur();
 
-      // Trigger animation programmatically
       if (animateNavRef.current) {
         animateNavRef.current.triggerAnimation();
       }
@@ -105,7 +104,7 @@ export default function EnterNameScreen({
         navigateTo={() => navigation.navigate("playerImage", { name, type })}
         timeMs={5000}
       >
-        <PrimaryText style={styles.exitNameText}>Eddi The King</PrimaryText>
+        <PrimaryText style={styles.exitNameText}>{name}</PrimaryText>
         <PrimaryText style={styles.exitText}>{prompt}</PrimaryText>
       </AnimateNavigation>
     </>

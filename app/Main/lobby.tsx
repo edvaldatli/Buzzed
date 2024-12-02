@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useColyseusStore } from "@/context/ColyseusContext";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import PrimaryText from "@/components/primaryText";
@@ -28,6 +27,10 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const animateNavRef = useRef<AnimateNavigationHandle>(null);
 
   const setNavigation = useColyseusStore((state) => state.setNavigation);
+
+  useEffect(() => {
+    setNavigation(navigation);
+  }, [navigation]);
 
   useEffect(() => {
     console.log("StartGame listener");
@@ -139,10 +142,22 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
         ref={animateNavRef}
         timeMs={5000}
         navigateTo={() => {
-          setNavigation(navigation);
+          setTimeout(() => {
+            setNavigation(navigation);
+          }, 1000);
         }}
       >
-        <PrimaryText style={{ color: "white" }}>Eddi The King</PrimaryText>
+        <PrimaryText
+          style={{
+            fontSize: 60,
+            color: "#83E4FF",
+            textShadowColor: "#FF0105",
+            textShadowOffset: { width: 9, height: -11 },
+            textShadowRadius: 1,
+          }}
+        >
+          GET READY
+        </PrimaryText>
       </AnimateNavigation>
     </>
   );

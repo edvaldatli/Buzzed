@@ -12,6 +12,10 @@
     "newArchEnabled": true,
     "backgroundColor": "#FF80C6",
     "entryPoint": "expo-router/entry",
+    "splash": {
+      "image": "./assets/BUZZEDSPLASHTEST.png",
+      "resizeMode": "cover"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.FrostFallStudios.Buzzed"

@@ -1,6 +1,8 @@
 import BackgroundGradient from "@/components/backgroundGradient";
+import DisplayAvatar from "@/components/displayAvatar";
 import PrimaryText from "@/components/primaryText";
 import { useColyseusStore } from "@/context/ColyseusContext";
+import { MotiText, MotiView, SafeAreaView } from "moti";
 import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
@@ -16,33 +18,100 @@ export default function QuestionScreen() {
     return (
       <View style={styles.container}>
         <BackgroundGradient style={styles.background} />
-        <PrimaryText tlw="text-4xl text-center text-white w-full">
-          Loading...
-        </PrimaryText>
+        <PrimaryText>Loading...</PrimaryText>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <BackgroundGradient style={styles.background} />
+    <SafeAreaView style={styles.container}>
+      <PrimaryText
+        style={{
+          fontSize: 60,
+          color: "white",
+        }}
+      >
+        Round {rounds.length.toString()}
+      </PrimaryText>
       {rounds && (
-        <View>
-          <PrimaryText tlw="text-3xl text-center flex-nowrap">
-            Who is more likely to{" "}
-          </PrimaryText>
-          <View className="h-4" />
-          <PrimaryText tlw="text-4xl text-center text-white w-full">
-            {rounds[currentRoundIndex].question}
-          </PrimaryText>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 20,
+          }}
+        >
+          <MotiView
+            from={{
+              translateX: -400,
+            }}
+            animate={{
+              translateX: 0,
+            }}
+            exit={{
+              translateX: 400,
+            }}
+            transition={{
+              type: "spring",
+              duration: 3000,
+            }}
+          >
+            <DisplayAvatar
+              player={rounds[currentRoundIndex].battlingPlayers[0]}
+            />
+          </MotiView>
+          <MotiText
+            from={{
+              opacity: 0,
+              translateY: 100,
+            }}
+            animate={{
+              opacity: 1,
+              translateY: 0,
+            }}
+            exit={{
+              opacity: 0,
+              translateY: -100,
+            }}
+            transition={{
+              type: "timing",
+              duration: 400,
+              delay: 250,
+            }}
+          >
+            <PrimaryText
+              style={{ fontSize: 100, color: "white", textAlign: "center" }}
+            >
+              VS
+            </PrimaryText>
+          </MotiText>
+          <MotiView
+            from={{
+              translateX: 400,
+            }}
+            animate={{
+              translateX: 0,
+            }}
+            exit={{
+              translateX: -400,
+            }}
+            transition={{
+              type: "spring",
+              duration: 3000,
+              delay: 500,
+            }}
+          >
+            <DisplayAvatar
+              player={rounds[currentRoundIndex].battlingPlayers[1]}
+            />
+          </MotiView>
         </View>
       )}
       <View />
-      <PrimaryText tlw="text-4xl text-center text-white w-full">
-        Round {rounds.length.toString()}
-      </PrimaryText>
+
       <View />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -60,5 +129,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     padding: 24,
+    backgroundColor: "#FF80C6",
   },
 });

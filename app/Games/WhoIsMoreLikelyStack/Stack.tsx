@@ -28,7 +28,7 @@ export default function WhoIsMoreLikelyStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
-          animation: "fade",
+          animation: "none",
         }}
       />
       <Stack.Screen

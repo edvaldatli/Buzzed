@@ -8,6 +8,7 @@ import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, MotiView, useAnimationState } from "moti";
 import { Player } from "@/types/GameTypes";
+import DisplayAvatar from "@/components/displayAvatar";
 
 export default function VotingScreen() {
   const { rounds, currentRoom, players, currentState, currentRoundIndex } =
@@ -16,6 +17,7 @@ export default function VotingScreen() {
 
   const latestRound = rounds[rounds.length - 1];
   const [firstPlayer, secondPlayer] = latestRound?.battlingPlayers || [];
+  const [voted, setVoted] = useState(false);
 
   const firstPlayerAnimation = useAnimationState({
     idle: { scale: 1 },
@@ -42,7 +44,14 @@ export default function VotingScreen() {
     },
   });
 
+  const exitAnimation = useAnimationState({
+    from: { scale: 2000 },
+    to: { scale: 0 },
+  });
+
   const votePlayer = (playerId: string) => {
+    if (voted) return;
+
     if (playerId === firstPlayer.id) {
       firstPlayerAnimation.transitionTo("clicked");
       secondPlayerAnimation.transitionTo("minimize");
@@ -53,34 +62,8 @@ export default function VotingScreen() {
     orTextAnimation.transitionTo("hide");
 
     currentRoom?.send("votePlayer", playerId);
+    setVoted(true);
   };
-
-  const handlePlayerVoted = (message: any) => {
-    console.log("Player voted", message);
-  };
-
-  useEffect(() => {
-    if (currentState === "displaying_results") {
-      firstPlayerAnimation.transitionTo("hide");
-      secondPlayerAnimation.transitionTo("hide");
-      orTextAnimation.transitionTo("hide");
-
-      const winnerId = rounds[rounds.length - 1].winner;
-      const winningPlayer = players.find((player) => player.id === winnerId);
-      setWinner(winningPlayer);
-
-      setTimeout(() => {
-        winnerAnimation.transitionTo("visible");
-      }, 500);
-    } else {
-      setWinner(null);
-      winnerAnimation.transitionTo("hidden");
-    }
-
-    currentRoom?.onMessage("playerVoted", (message) => {
-      handlePlayerVoted(message);
-    });
-  }, [currentState]);
 
   if (!rounds || !rounds[currentRoundIndex]) {
     return (
@@ -94,89 +77,69 @@ export default function VotingScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <BackgroundGradient style={styles.background} />
-      <Timer />
-      <View>
-        <PrimaryText tlw="text-2xl text-center">
-          Who is more likely to
-        </PrimaryText>
-        <View className="h-4" />
-        <PrimaryText tlw="text-4xl text-white text-center">
-          {rounds[rounds.length - 1].question}
-        </PrimaryText>
-      </View>
-
-      <View className="w-full h-1/2 justify-center">
-        {firstPlayer && (
-          <TouchableOpacity
-            onPress={() => votePlayer(firstPlayer.id)}
-            key={firstPlayer.id}
-          >
-            <MotiView
-              className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg"
-              state={firstPlayerAnimation}
-            >
-              <PrimaryText tlw="text-4xl text-center text-white">
-                {firstPlayer.name}
-              </PrimaryText>
-            </MotiView>
-          </TouchableOpacity>
-        )}
-        <MotiView state={orTextAnimation}>
-          <PrimaryText tlw="text-xl text-white text-center my-2">
-            OR
+    <>
+      <SafeAreaView style={styles.container}>
+        <BackgroundGradient style={styles.background} />
+        <Timer />
+        <View style={styles.questionContainer}>
+          <PrimaryText style={styles.defaultText}>
+            Who is more likely to
           </PrimaryText>
-        </MotiView>
-        {secondPlayer && (
-          <TouchableOpacity
-            onPress={() => votePlayer(secondPlayer.id)}
-            key={secondPlayer.id}
-          >
-            <MotiView
-              className="flex justify-center items-center bg-primaryPink h-24 w-full rounded-lg shadow-lg"
-              state={secondPlayerAnimation}
+          <PrimaryText style={styles.questionText}>
+            {rounds[rounds.length - 1].question}
+          </PrimaryText>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          {firstPlayer && (
+            <TouchableOpacity
+              onPress={() => votePlayer(firstPlayer.id)}
+              key={firstPlayer.id}
             >
-              <PrimaryText tlw="text-4xl text-center text-white">
-                {secondPlayer.name}
-              </PrimaryText>
-            </MotiView>
-          </TouchableOpacity>
-        )}
-        <AnimatePresence>
-          {winner && (
-            <MotiView
-              key={winner.id}
-              className="flex justify-center items-center bg-primaryPink shadow-lg w-full p-4 rounded-lg absolute"
-              state={winnerAnimation}
-            >
-              <Image
-                source={
-                  winner.avatar === "default-avatar-url"
-                    ? require("../../../assets/images/avatar-placeholder.png")
-                    : winner.avatar
-                }
-                className="w-20 h-20 rounded-full border-green-500 border-4"
-              />
-              <PrimaryText tlw="text-white text-2xl">{winner.name}</PrimaryText>
-            </MotiView>
+              <MotiView
+                state={firstPlayerAnimation}
+                style={styles.votePlayerContainer}
+              >
+                <DisplayAvatar player={firstPlayer} />
+                <PrimaryText style={styles.playerText}>
+                  {firstPlayer.name}
+                </PrimaryText>
+              </MotiView>
+            </TouchableOpacity>
           )}
-        </AnimatePresence>
-      </View>
-      <View className="flex flex-row justify-around w-full h-full">
-        {players.map((player) => (
-          <Image
-            key={player.id}
-            source={
-              player.avatar === "default-avatar-url"
-                ? require("../../../assets/images/avatar-placeholder.png")
-                : player.avatar
-            }
-            className="w-16 h-16 rounded-full border-green-500 border-4"
-          />
-        ))}
-      </View>
-    </SafeAreaView>
+          <MotiView
+            state={orTextAnimation}
+            style={{ justifyContent: "center" }}
+          >
+            <PrimaryText>OR</PrimaryText>
+          </MotiView>
+          {secondPlayer && (
+            <TouchableOpacity
+              onPress={() => votePlayer(secondPlayer.id)}
+              key={secondPlayer.id}
+            >
+              <MotiView
+                state={secondPlayerAnimation}
+                style={styles.votePlayerContainer}
+              >
+                <DisplayAvatar player={secondPlayer} />
+                <PrimaryText style={styles.playerText}>
+                  {secondPlayer.name}
+                </PrimaryText>
+              </MotiView>
+            </TouchableOpacity>
+          )}
+        </View>
+      </SafeAreaView>
+      <MotiView
+        state={exitAnimation}
+        transition={{
+          type: "timing",
+          duration: 800,
+        }}
+        style={styles.exitAnimationStyle}
+      />
+    </>
   );
 }
 
@@ -191,9 +154,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-around",
     alignItems: "center",
     padding: 24,
-    paddingVertical: 48,
+  },
+  exitAnimationStyle: {
+    position: "absolute",
+    backgroundColor: "#FF69B4",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+    left: -20,
+    width: 2,
+    height: 2,
+  },
+  questionContainer: {
+    width: "100%",
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 120,
+  },
+  defaultText: {
+    color: "#fff",
+    fontSize: 24,
+    textAlign: "center",
+  },
+  questionText: {
+    color: "#fff",
+    fontSize: 42,
+    textAlign: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    gap: 20,
+  },
+  votePlayerContainer: {
+    gap: 10,
+  },
+  playerText: {
+    color: "#fff",
+    fontSize: 24,
+    textAlign: "center",
   },
 });

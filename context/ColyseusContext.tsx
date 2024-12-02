@@ -85,7 +85,6 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
       room.onMessage("startGame", (message: any) => {
         console.log("Starting game...");
-        get().handleNavigation("intro");
       });
 
       room.onLeave(() => {
@@ -202,10 +201,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
     switch (gameState) {
       case "lobby":
-        navigation.replace("lobby");
-        break;
-      case "intro":
-        navigation.popTo("WhoIsMoreLikelyStack", { screen: "intro" });
+        navigation.popTo("lobby");
         break;
       case "displaying_question":
         navigation.popTo("WhoIsMoreLikelyStack", { screen: "question" });

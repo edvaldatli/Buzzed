@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useNavigation } from "expo-router";
 import PrimaryText from "@/components/primaryText";
+import BackgroundGradient from "@/components/backgroundGradient";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "home">;
 
@@ -57,6 +58,7 @@ export default function App() {
 
   return (
     <>
+      <BackgroundGradient style={styles.background} />
       <View style={styles.container} onLayout={onLayoutRootView}>
         <AnimateNavigation
           timeMs={4000}
@@ -71,11 +73,17 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   mainContent: {
     flex: 1,
