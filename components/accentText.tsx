@@ -7,12 +7,7 @@ type AccentTextProps = {
 
 export default function AccentText({ children, tlw }: AccentTextProps) {
   return (
-    <Text
-      className={`text-7xl font-extrabold text-accentPurple shadow-lg ${
-        tlw || ""
-      }`}
-      style={{ ...styles.textStyle, fontFamily: "Rubik-BoldItalic" }}
-    >
+    <Text style={{ ...styles.textStyle, fontFamily: "Rubik-BoldItalic" }}>
       {children}
     </Text>
   );

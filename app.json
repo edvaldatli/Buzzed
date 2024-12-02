@@ -6,12 +6,11 @@
     "slug": "Buzzed",
     "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appstore.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "backgroundColor": "#FF80C6",
-    "entryPoint": "expo-router/entry",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.FrostFallStudios.Buzzed"

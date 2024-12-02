@@ -10,6 +10,7 @@ import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useNavigation } from "expo-router";
 import PrimaryText from "@/components/primaryText";
 import BackgroundGradient from "@/components/backgroundGradient";
+import { useCustomFonts } from "@/hooks/useCustomFonts";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "home">;
 
