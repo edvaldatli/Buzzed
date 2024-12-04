@@ -15,22 +15,15 @@ export default function PrimaryButton({
   disabled,
 }: PositiveButtonProps) {
   return (
-    <MotiView
-      from={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ type: "timing", duration: 200 }}
-      style={{ width: "100%" }}
+    <TouchableOpacity
+      style={disabled ? styles.disabledButtonStyle : styles.buttonStyle}
+      onPress={handlePress}
+      disabled={disabled}
     >
-      <TouchableOpacity
-        style={disabled ? styles.disabledButtonStyle : styles.buttonStyle}
-        onPress={handlePress}
-        disabled={disabled}
-      >
-        <Text style={disabled ? styles.disabledMainText : styles.mainText}>
-          {text}
-        </Text>
-      </TouchableOpacity>
-    </MotiView>
+      <Text style={disabled ? styles.disabledMainText : styles.mainText}>
+        {text}
+      </Text>
+    </TouchableOpacity>
   );
 }
 

@@ -1,16 +1,16 @@
 import { Player } from "@/types/GameTypes";
-import { View } from "react-native";
 import PrimaryText from "./primaryText";
 import { Image } from "expo-image";
-import { useEffect } from "react";
 import { MotiView } from "moti";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type LobbyAvatarProps = {
   player: Player;
+  host?: boolean;
 };
 
-export default function LobbyAvatar({ player }: LobbyAvatarProps) {
+export default function LobbyAvatar({ player, host }: LobbyAvatarProps) {
   return (
     <MotiView
       from={{ translateX: -400 }}
@@ -18,6 +18,19 @@ export default function LobbyAvatar({ player }: LobbyAvatarProps) {
       transition={{ type: "spring", duration: 1600 }}
       style={styles.container}
     >
+      {host && (
+        <View
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            top: -16,
+            left: 30,
+            transform: [{ rotate: "30deg" }],
+          }}
+        >
+          <MaterialCommunityIcons name={"crown"} size={24} color="gold" />
+        </View>
+      )}
       <Image
         source={
           player.avatar == "default-avatar-url"

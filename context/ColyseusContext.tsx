@@ -15,6 +15,7 @@ interface ColyseusState {
   navigation: NativeStackNavigationProp<any> | null;
   sessionId: string | null;
   roomId: string | null;
+  maxRounds: number;
   setSessionInfo: (sessionId: string, roomId: string) => void;
   setClient: (client: Colyseus.Client) => void;
   setCurrentRoom: (room: Colyseus.Room | null) => void;
@@ -44,6 +45,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   navigation: null,
   sessionId: null,
   roomId: null,
+  maxRounds: 5,
   setSessionInfo: (sessionId, roomId) => set({ sessionId, roomId }),
   setNavigation: (navigation) => set({ navigation }),
   setClient: (client: Colyseus.Client) => set(() => ({ client })),
@@ -54,7 +56,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
   createRoom: async (playerName: string, image: string) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
 
@@ -71,11 +73,33 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
 
       room.onStateChange((state: any) => {
-        set({
-          currentRoundIndex: state.currentRoundIndex,
-          players: [...state.players],
-          gameState: state,
-          rounds: [...(state.rounds || [])],
+        set((prev) => {
+          const newValues: any = {};
+
+          if (state.currentRoundIndex !== prev.currentRoundIndex) {
+            newValues.currentRoundIndex = state.currentRoundIndex;
+          }
+
+          if (JSON.stringify(state.players) !== JSON.stringify(prev.players)) {
+            newValues.players = [...state.players];
+          }
+
+          if (JSON.stringify(state.rounds) !== JSON.stringify(prev.rounds)) {
+            newValues.rounds = [...(state.rounds || [])];
+          }
+
+          if (state.maxRounds !== prev.maxRounds) {
+            newValues.maxRounds = state.maxRounds;
+          }
+
+          if (Object.keys(newValues).length > 0) {
+            return {
+              ...prev,
+              ...newValues,
+            };
+          }
+
+          return prev;
         });
       });
 
@@ -89,7 +113,12 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
       room.onLeave(() => {
         get().reconnect();
-        set({ connected: false, currentRoom: null, players: [] });
+        set({
+          connected: false,
+          currentRoom: null,
+          players: [],
+          gameState: null,
+        });
       });
     } catch (error) {
       console.error("Error creating room:", error);
@@ -102,7 +131,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     avatarBase64: string
   ) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
 
@@ -119,11 +148,37 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
 
       room.onStateChange((state: any) => {
-        set({
-          currentRoundIndex: state.currentRoundIndex,
-          players: [...state.players],
-          gameState: state,
-          rounds: [...(state.rounds || [])],
+        set((prev) => {
+          const newValues: any = {};
+
+          // Only update currentRoundIndex if it has changed
+          if (state.currentRoundIndex !== prev.currentRoundIndex) {
+            newValues.currentRoundIndex = state.currentRoundIndex;
+          }
+
+          // Only update players if they have changed
+          if (JSON.stringify(state.players) !== JSON.stringify(prev.players)) {
+            newValues.players = [...state.players];
+          }
+
+          // Only update rounds if they have changed
+          if (JSON.stringify(state.rounds) !== JSON.stringify(prev.rounds)) {
+            newValues.rounds = [...(state.rounds || [])];
+          }
+
+          if (state.maxRounds !== prev.maxRounds) {
+            newValues.maxRounds = state.maxRounds;
+          }
+
+          // Return the updated state only if changes are detected
+          if (Object.keys(newValues).length > 0) {
+            return {
+              ...prev,
+              ...newValues,
+            };
+          }
+
+          return prev; // No changes detected, return the current state
         });
       });
 
@@ -132,7 +187,12 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
 
       room.onLeave(() => {
-        set({ connected: false, currentRoom: null, players: [] });
+        set({
+          connected: false,
+          currentRoom: null,
+          players: [],
+          gameState: null,
+        });
       });
     } catch (error) {
       console.error("Error joining room:", error);
@@ -201,23 +261,20 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
     switch (gameState) {
       case "lobby":
-        navigation.popTo("lobby");
+        navigation.replace("lobby");
         break;
       case "displaying_question":
-        navigation.popTo("WhoIsMoreLikelyStack", { screen: "question" });
+        navigation.replace("WhoIsMoreLikelyStack", { screen: "question" });
         break;
       case "round_in_progress":
-        navigation.popTo("WhoIsMoreLikelyStack", { screen: "voting" });
-        break;
-      case "displaying_results":
-        navigation.popTo("WhoIsMoreLikelyStack", { screen: "votingResult" });
+        navigation.replace("WhoIsMoreLikelyStack", { screen: "voting" });
         break;
       case "end_game_screen":
-        navigation.popTo("WhoIsMoreLikelyStack", { screen: "result" });
+        navigation.replace("WhoIsMoreLikelyStack", { screen: "result" });
         break;
       default:
         console.error("Unexpected game state:", gameState);
-        navigation.popTo("error", {
+        navigation.replace("error", {
           message: `Unexpected game state: ${gameState}`,
         });
     }

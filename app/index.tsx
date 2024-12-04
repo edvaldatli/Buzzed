@@ -8,31 +8,27 @@ import AnimateNavigation, {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { useNavigation } from "expo-router";
-import PrimaryText from "@/components/primaryText";
 import BackgroundGradient from "@/components/backgroundGradient";
 import { useCustomFonts } from "@/hooks/useCustomFonts";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "home">;
 
-// Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const navigation = useNavigation<NavigationProp>();
   const [appIsReady, setAppIsReady] = useState(false);
+  const [loaded] = useCustomFonts();
   const animationRef = useRef<AnimateNavigationHandle>(null);
 
   useEffect(() => {
-    console.log("App started");
     async function prepare() {
       try {
-        console.log("Loading fonts and assets");
         await Font.loadAsync({
           Rubik: require("../assets/fonts/Rubik/Rubik-Bold.ttf"),
           "Rubik-Italic": require("../assets/fonts/Rubik/Rubik-Italic.ttf"),
         });
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        console.log("Assets loaded");
       } catch (e) {
         console.warn(e);
       } finally {
@@ -46,7 +42,6 @@ export default function App() {
   useEffect(() => {
     if (appIsReady) {
       SplashScreen.hideAsync();
-      console.log("Triggering animation...");
       animationRef.current?.triggerAnimation();
     }
   }, [appIsReady]);
@@ -62,12 +57,10 @@ export default function App() {
       <View style={styles.container} onLayout={onLayoutRootView}>
         <BackgroundGradient style={styles.background} />
         <AnimateNavigation
-          timeMs={4000}
+          timeMs={500}
           navigateTo={() => navigation.navigate("home")}
           ref={animationRef}
-        >
-          <PrimaryText style={{ color: "white" }}>Welcome</PrimaryText>
-        </AnimateNavigation>
+        />
       </View>
     </>
   );
@@ -93,7 +86,17 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
-    fontFamily: "Rubik", // Use the loaded font
+    fontFamily: "Rubik",
     color: "#333",
   },
+  splashContainer: {
+    flex: 1,
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+  },
+  madeByContainer: {},
+  madeByImage: {},
 });

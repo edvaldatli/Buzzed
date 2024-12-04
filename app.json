@@ -11,6 +11,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "backgroundColor": "#FF80C6",
+    "splash": {
+      "image": "./assets/images/BuzzedSplashScreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FF80C6"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.FrostFallStudios.Buzzed"

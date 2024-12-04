@@ -22,6 +22,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { currentRoom, disconnect, players } = useColyseusStore();
   const { notification } = useHaptics();
   const [userId, setUserId] = useState<string>("");
+  const [disabledStartButton, setDisabledStartButton] = useState(false);
 
   const animateNavRef = useRef<AnimateNavigationHandle>(null);
 
@@ -32,6 +33,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   }, [navigation]);
 
   useEffect(() => {
+    setDisabledStartButton(false);
     console.log("StartGame listener");
     if (!currentRoom) return;
     currentRoom.onMessage("startGame", (data) => {
@@ -57,6 +59,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   };
 
   const handleStartGame = () => {
+    setDisabledStartButton(true);
     currentRoom?.send("startGame");
   };
 
@@ -86,12 +89,19 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
         <BackgroundGradient style={styles.background} />
         <MaterialCommunityIcons
           name="qrcode-scan"
-          size={40}
+          size={34}
           color="#FD841F"
           onPress={() =>
             navigation.navigate("qrCodeModal", { value: currentRoom.id })
           }
           style={styles.openModalButton}
+        />
+        <MaterialCommunityIcons
+          name="cog-outline"
+          size={34}
+          color="#FD841F"
+          onPress={() => navigation.navigate("gameSettings")}
+          style={{ ...styles.openModalButton, right: 50 }}
         />
         <View style={styles.container}>
           <PrimaryText>The crew</PrimaryText>
@@ -99,7 +109,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
           <View style={styles.playersContainer}>
             {players.map((player) => (
               <View key={player.id} style={styles.playerWrapper}>
-                <LobbyAvatar player={player} />
+                <LobbyAvatar player={player} host={player.id === host.id} />
                 <View style={styles.spacer} />
               </View>
             ))}
@@ -111,6 +121,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
                   <PrimaryButton
                     text="Start game"
                     handlePress={handleStartGame}
+                    disabled={disabledStartButton}
                   />
                   <View style={styles.spacerLarge} />
                 </>

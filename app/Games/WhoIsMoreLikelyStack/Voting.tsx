@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MotiView, useAnimationState } from "moti";
+import { AnimatePresence, MotiView, useAnimationState } from "moti";
 import BackgroundGradient from "@/components/backgroundGradient";
 import PrimaryText from "@/components/primaryText";
 import Timer from "@/components/timer";
@@ -11,24 +11,49 @@ import { Player } from "@/types/GameTypes";
 
 export default function VotingScreen() {
   const { rounds, currentRoom, currentRoundIndex } = useColyseusStore();
-  const latestRound = rounds[rounds.length - 1];
+  const latestRound = rounds[currentRoundIndex];
   const [firstPlayer, secondPlayer] = latestRound?.battlingPlayers || [];
   const [voted, setVoted] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const [showPlayers, setShowPlayers] = useState<boolean>(true);
+  const [winner, setWinner] = useState<Player | null>(null);
 
   const firstPlayerAnimation = useAnimationState({
-    idle: { scale: 1 },
+    start: { scale: 1 },
     clicked: { scale: 1.05 },
-    minimize: { opacity: 0.95, scale: 0.95, transition: { duration: 0.5 } },
+    minimize: { opacity: 0.95, scale: 0.95 },
+    winner: { opacity: 1, scale: 1.1 },
+    displayNone: { opacity: 0, scale: 0.2 },
     hide: { opacity: 0, scale: 0.8 },
   });
 
   const secondPlayerAnimation = useAnimationState({
-    idle: { scale: 1 },
+    start: { scale: 1 },
     clicked: { scale: 1.05 },
-    minimize: { opacity: 0.95, scale: 0.95, transition: { duration: 0.5 } },
+    minimize: { opacity: 0.95, scale: 0.95 },
+    winner: { opacity: 1, scale: 1.1 },
+    displayNone: { opacity: 0, scale: 0.2 },
     hide: { opacity: 0, scale: 0.8 },
   });
+
+  useEffect(() => {
+    const listen = () => {
+      currentRoom?.onMessage("showingResults", (winnerId: string) => {
+        if (winnerId) {
+          const winner = currentRoom?.state.players.find(
+            (player: Player) => player.id === winnerId
+          );
+          setWinner(winner);
+        } else {
+          setWinner(null);
+        }
+
+        setShowPlayers(false);
+      });
+    };
+
+    listen();
+  }, []);
 
   const votePlayer = (playerId: string) => {
     if (voted) return;
@@ -70,7 +95,7 @@ export default function VotingScreen() {
         </View>
 
         <View style={styles.buttonContainer}>
-          {firstPlayer && (
+          {firstPlayer && showPlayers && (
             <TouchableOpacity
               onPress={() => votePlayer(firstPlayer.id)}
               key={firstPlayer.id}
@@ -89,7 +114,7 @@ export default function VotingScreen() {
               </MotiView>
             </TouchableOpacity>
           )}
-          {secondPlayer && (
+          {secondPlayer && showPlayers && (
             <TouchableOpacity
               onPress={() => votePlayer(secondPlayer.id)}
               key={secondPlayer.id}
@@ -108,6 +133,21 @@ export default function VotingScreen() {
               </MotiView>
             </TouchableOpacity>
           )}
+          <AnimatePresence>
+            {!showPlayers && (
+              <MotiView
+                state={secondPlayerAnimation}
+                from={{ opacity: 0, translateY: 100 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                style={[styles.votePlayerContainer, { width: "100%" }]}
+              >
+                {winner && <DisplayAvatar player={winner!} />}
+                <PrimaryText style={styles.playerText}>
+                  {winner?.name || "Its a tie!"}
+                </PrimaryText>
+              </MotiView>
+            )}
+          </AnimatePresence>
         </View>
       </SafeAreaView>
     </>

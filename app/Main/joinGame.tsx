@@ -6,10 +6,11 @@ import ErrorButton from "@/components/errorButton";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BarcodeScanningResult } from "expo-camera";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { MotiView } from "moti";
 import BackgroundGradient from "@/components/backgroundGradient";
+import Toast from "react-native-toast-message";
 
 type JoinGameScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -24,17 +25,28 @@ export default function JoinGameScreen({
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [displayCancelButton, setDisplayCancelButton] =
+    useState<boolean>(false);
   const { joinRoom, currentRoom } = useColyseusStore();
-
-  useEffect(() => {}, [currentRoom]);
 
   const handleScan = async (data: BarcodeScanningResult) => {
     if (disabled) return;
     setDisabled(true);
-    setLoading(true);
     try {
       await joinRoom(data.data, name, image!);
-      navigation.navigate("lobby");
+      if (currentRoom) {
+        navigation.navigate("lobby");
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error joining game",
+          text2: "Room not found",
+          text1Style: { fontSize: 20 },
+          text2Style: { fontSize: 16 },
+        });
+        setLoading(false);
+        setDisabled(false);
+      }
     } catch (e) {
       setLoading(false);
       console.log(e);
@@ -55,8 +67,25 @@ export default function JoinGameScreen({
         style={styles.container}
       >
         <BackgroundGradient style={styles.background} />
-        <PrimaryText tlw="text-3xl text-center">Loading...</PrimaryText>
-        <ActivityIndicator />
+        <View />
+        <View>
+          <ActivityIndicator
+            size={"large"}
+            color={"white"}
+            style={{ alignSelf: "center" }}
+          />
+        </View>
+        {displayCancelButton && (
+          <View style={{ gap: 10 }}>
+            <Text style={{ textAlign: "center", fontSize: 20 }}>
+              This is taking longer than usual
+            </Text>
+            <ErrorButton
+              text="Cancel"
+              handlePress={() => navigation.navigate("home")}
+            />
+          </View>
+        )}
       </View>
     );
   }
@@ -70,7 +99,7 @@ export default function JoinGameScreen({
       style={styles.container}
     >
       <BackgroundGradient style={styles.background} />
-      <PrimaryText tlw="text-3xl text-center">
+      <PrimaryText style={styles.headerText}>
         Scan your friend's QR code
       </PrimaryText>
       <QRCodeScanner onScan={(data) => handleScan(data)} />
@@ -97,5 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     padding: 24,
+  },
+  headerText: {
+    fontSize: 44,
   },
 });

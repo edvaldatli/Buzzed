@@ -9,6 +9,7 @@ export type RootStackParamList = {
   playerImage: { type: "createGame" | "joinGame"; name: string };
   error: { message: string };
   qrCodeModal: { value: string };
+  gameSettings: undefined;
 
   // Who is more likely navigation stack
   WhoIsMoreLikelyStack: undefined;

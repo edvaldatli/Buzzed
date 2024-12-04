@@ -40,7 +40,6 @@ export default function EnterNameScreen({
   const [error, setError] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
 
-  // Animation trigger ref
   const animateNavRef = useRef<AnimateNavigationHandle>(null);
   const inputRef = useRef<TextInput>(null);
 
@@ -59,7 +58,6 @@ export default function EnterNameScreen({
   };
 
   const handleNext = () => {
-    console.log("handleNext");
     if (name === "") {
       setError("Lets put in that name");
     } else {

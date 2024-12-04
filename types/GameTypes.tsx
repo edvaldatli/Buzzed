@@ -3,4 +3,5 @@ export type Player = {
   name: string;
   avatar: string;
   color: string;
+  score: number;
 };

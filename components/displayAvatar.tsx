@@ -1,7 +1,6 @@
 import { Player } from "@/types/GameTypes";
 import { View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import PrimaryText from "@/components/primaryText";
 
 type DisplayAvatarProps = {
   player: Player;
