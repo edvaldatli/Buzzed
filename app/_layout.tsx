@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import Toast from "react-native-toast-message";
+import { useKeepAwake } from "expo-keep-awake";
 
 // Main screens
 import App from "@/app/index";
@@ -20,6 +21,7 @@ import WhoIsMoreLikelyStack from "./Games/WhoIsMoreLikelyStack/Stack";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootLayout() {
+  useKeepAwake();
   return (
     <>
       <Stack.Navigator initialRouteName="app">
@@ -79,6 +81,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="lobby"
           component={LobbyScreen}
+          key={Math.random().toString()}
           options={{
             headerShown: false,
             gestureEnabled: false,

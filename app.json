@@ -67,7 +67,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Buzzed to access your camera"
+          "cameraPermission": "Allow Buzzed to access your camera. We use the camera to take a selfie so your friends can see you!"
         }
       ]
     ],

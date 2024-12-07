@@ -25,35 +25,31 @@ export default function JoinGameScreen({
   const { permission, requestPermission } = useCamera();
   const [disabled, setDisabled] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [lastScanned, setLastScanned] = useState<string>("");
   const [displayCancelButton, setDisplayCancelButton] =
     useState<boolean>(false);
   const { joinRoom, currentRoom } = useColyseusStore();
 
   const handleScan = async (data: BarcodeScanningResult) => {
-    if (disabled) return;
+    if (disabled || lastScanned == data.data) return;
+    setLastScanned(data.data);
     setDisabled(true);
     try {
       await joinRoom(data.data, name, image!);
       if (currentRoom) {
         navigation.navigate("lobby");
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Error joining game",
-          text2: "Room not found",
-          text1Style: { fontSize: 20 },
-          text2Style: { fontSize: 16 },
-        });
-        setLoading(false);
-        setDisabled(false);
       }
     } catch (e) {
-      setLoading(false);
-      console.log(e);
+      console.log("Error joining room", e);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+      });
+    } finally {
       setDisabled(false);
+      setLoading(false);
     }
-
-    console.log("Current room in joinGame", currentRoom);
   };
 
   if (!permission) {

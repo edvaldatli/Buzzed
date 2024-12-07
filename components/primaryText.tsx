@@ -2,7 +2,7 @@ import { Text, StyleSheet, TextStyle } from "react-native";
 
 type PrimaryTextProps = {
   children: string | string[];
-  style?: TextStyle | TextStyle[]; // Accept external styles
+  style?: TextStyle | TextStyle[];
 };
 
 export default function PrimaryText({ children, style }: PrimaryTextProps) {

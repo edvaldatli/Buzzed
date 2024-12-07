@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   mainText: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 20,
     width: "100%",
     fontFamily: "Rubik-MediumItalic",
   },

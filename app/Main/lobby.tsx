@@ -15,6 +15,7 @@ import ErrorButton from "@/components/errorButton";
 import LobbyAvatar from "@/components/lobbyAvatar";
 import PrimaryButton from "@/components/primaryButton";
 import BackgroundGradient from "@/components/backgroundGradient";
+import Toast from "react-native-toast-message";
 
 type LobbyScreenProps = NativeStackScreenProps<RootStackParamList, "lobby">;
 
@@ -23,6 +24,7 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   const { notification } = useHaptics();
   const [userId, setUserId] = useState<string>("");
   const [disabledStartButton, setDisabledStartButton] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const animateNavRef = useRef<AnimateNavigationHandle>(null);
 
@@ -64,6 +66,14 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   };
 
   if (!currentRoom) {
+    Toast.show({
+      type: "error",
+      text1: "Room no longer exists",
+      text2: "Redirecting to home...",
+      autoHide: true,
+      visibilityTime: 3000,
+      onHide: () => navigation.navigate("home"),
+    });
     return (
       <View style={styles.loadingContainer}>
         <BackgroundGradient style={styles.background} />
@@ -74,14 +84,6 @@ export default function LobbyScreen({ route, navigation }: LobbyScreenProps) {
   }
 
   const host = currentRoom.state.host;
-
-  if (!currentRoom) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
 
   return (
     <>

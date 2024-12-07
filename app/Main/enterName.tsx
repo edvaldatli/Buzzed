@@ -28,6 +28,11 @@ const prompts = [
   "You're not just a name, you're a vibe!",
   "If names were gold, you'd be a treasure chest!",
   "Your name has been saved in the Hall of Fame... or at least in our app.",
+  "You should trademark that name before someone steals it!",
+  "Name goals achieved. Everyone else can go home.",
+  "Did you just name yourself after the main character? Bold move!",
+  "That name? It’s giving ‘iconic’ vibes.",
+  "Your name just got a 5-star rating from the Name Critics Association.",
 ];
 
 export default function EnterNameScreen({
@@ -128,6 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
+    width: "100%",
     gap: 20,
     paddingHorizontal: 24,
   },

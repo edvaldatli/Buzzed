@@ -1,5 +1,3 @@
-// TODO: Remove Tailwind and implement stylesheet
-
 import { StyleSheet, View } from "react-native";
 import PrimaryText from "./primaryText";
 import { useState, useRef, useEffect } from "react";

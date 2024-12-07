@@ -41,7 +41,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
   gameState: null,
   currentRoundIndex: 0,
   currentState: "",
-  rounds: [], // Initialize as an empty array to avoid undefined errors
+  rounds: [],
   navigation: null,
   sessionId: null,
   roomId: null,
@@ -56,7 +56,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
   createRoom: async (playerName: string, image: string) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
 
@@ -65,6 +65,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         name: playerName,
         avatarFile: image,
       });
+
       set({
         currentRoom: room,
         connected: true,
@@ -131,7 +132,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     avatarBase64: string
   ) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
+      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
     );
     set({ client });
 
@@ -151,17 +152,14 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
         set((prev) => {
           const newValues: any = {};
 
-          // Only update currentRoundIndex if it has changed
           if (state.currentRoundIndex !== prev.currentRoundIndex) {
             newValues.currentRoundIndex = state.currentRoundIndex;
           }
 
-          // Only update players if they have changed
           if (JSON.stringify(state.players) !== JSON.stringify(prev.players)) {
             newValues.players = [...state.players];
           }
 
-          // Only update rounds if they have changed
           if (JSON.stringify(state.rounds) !== JSON.stringify(prev.rounds)) {
             newValues.rounds = [...(state.rounds || [])];
           }
@@ -170,7 +168,6 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
             newValues.maxRounds = state.maxRounds;
           }
 
-          // Return the updated state only if changes are detected
           if (Object.keys(newValues).length > 0) {
             return {
               ...prev,
@@ -178,7 +175,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
             };
           }
 
-          return prev; // No changes detected, return the current state
+          return prev;
         });
       });
 
@@ -196,8 +193,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
     } catch (error) {
       console.error("Error joining room:", error);
-      const { navigation } = get();
-      navigation?.navigate("error", { message: "Room could not be found" });
+      throw error;
     }
   },
 
@@ -250,6 +246,8 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     const { currentRoom } = get();
     if (currentRoom) {
       currentRoom.leave();
+      const { navigation } = get();
+      navigation?.navigate("home");
     }
   },
 

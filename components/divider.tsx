@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 14,
     paddingHorizontal: 15,
     fontFamily: "Rubik-BoldItalic",
   },

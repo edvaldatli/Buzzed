@@ -5,7 +5,13 @@ import { RootStackParamList } from "@/navigation/RootStackParams";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CameraView } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import ErrorButton from "@/components/errorButton";
 import BackgroundGradient from "@/components/backgroundGradient";
 import { MotiView, useAnimationState } from "moti";
@@ -30,45 +36,68 @@ export default function PlayerImage({
   });
 
   useEffect(() => {
-    if (!permission || !permission.granted) {
+    if (!permission) {
       requestPermission();
-    } else {
+    } else if (permission?.granted) {
       setCameraActive(true);
     }
   }, [permission]);
 
-  const handleNext = async () => {
-    if (!cameraRef.current) return;
+  const handleNext = async (skipPhoto = false) => {
+    let imageBase64 = null;
 
-    try {
-      const photo = await cameraRef.current.takePictureAsync({
-        base64: true,
-        quality: 0.05,
-      });
-
-      if (photo?.base64) {
-        const imageBase64 = photo.base64;
-
-        navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
-          name: name,
-          image: imageBase64,
+    if (!skipPhoto && cameraActive && cameraRef.current) {
+      try {
+        const photo = await cameraRef.current.takePictureAsync({
+          base64: true,
+          quality: 0.05,
         });
+        if (photo?.base64) {
+          imageBase64 = photo.base64;
+        }
+      } catch (error) {
+        console.error("Error taking picture:", error);
       }
-    } catch (error) {
-      console.error("Error taking picture:", error);
     }
+
+    navigation.navigate(type === "createGame" ? "createGame" : "joinGame", {
+      name,
+      image: imageBase64,
+    });
   };
 
-  if (!permission || !permission.granted) {
+  if (!permission) {
     return (
       <>
         <BackgroundGradient style={styles.background} />
         <View style={styles.container}>
-          <PrimaryText>Please allow camera access</PrimaryText>
+          <PrimaryText>Requesting camera access...</PrimaryText>
           <PositiveButton
-            text="Allow Camera Access"
-            handlePress={requestPermission}
+            text="Continue without photo"
+            handlePress={() => handleNext(true)}
           />
+          <ErrorButton text="Cancel" handlePress={() => navigation.goBack()} />
+        </View>
+      </>
+    );
+  }
+
+  if (permission.status === "denied") {
+    return (
+      <>
+        <BackgroundGradient style={styles.background} />
+        <View style={styles.container}>
+          <PrimaryText>Camera access denied</PrimaryText>
+          <View style={{ gap: 20 }}>
+            <PositiveButton
+              text="Continue without photo"
+              handlePress={() => handleNext(true)}
+            />
+            <PositiveButton
+              text="Go to permissions"
+              handlePress={() => Linking.openSettings()}
+            />
+          </View>
           <ErrorButton text="Cancel" handlePress={() => navigation.goBack()} />
         </View>
       </>
@@ -79,6 +108,18 @@ export default function PlayerImage({
     <>
       <BackgroundGradient style={styles.background} />
       <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => handleNext(true)}
+          style={{ position: "absolute", right: 20, top: 50, padding: 5 }}
+        >
+          <Text
+            style={{
+              fontFamily: "Rubik-BoldItalic",
+            }}
+          >
+            SKIP
+          </Text>
+        </TouchableOpacity>
         <PrimaryText>Snap that selfie</PrimaryText>
         {cameraActive && (
           <CameraView
@@ -89,7 +130,7 @@ export default function PlayerImage({
           />
         )}
         <View style={styles.buttonContainer}>
-          <PositiveButton text="Cheese!" handlePress={handleNext} />
+          <PositiveButton text="Cheese!" handlePress={() => handleNext()} />
           <ErrorButton text="Cancel" handlePress={() => navigation.goBack()} />
         </View>
       </View>
@@ -130,14 +171,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "column",
     alignItems: "center",
-    gap: 20,
-    paddingHorizontal: 24,
+    gap: 10,
   },
   container: {
     flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
-    padding: 24,
+    padding: 48,
   },
   exitAnimationStyle: {
     position: "absolute",

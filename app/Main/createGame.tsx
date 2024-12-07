@@ -19,14 +19,12 @@ export default function CreateGameScreen({
   navigation,
 }: CreateGameScreen) {
   const { name, image } = route.params;
-  const { createRoom } = useColyseusStore();
+  const { createRoom, currentRoom } = useColyseusStore();
 
   useEffect(() => {
     const createNewGame = async () => {
       try {
         await createRoom(name, image!);
-
-        navigation.navigate("lobby");
         console.log("Game room created successfully");
       } catch (error) {
         console.log("Error creating game: ", error);
@@ -35,6 +33,12 @@ export default function CreateGameScreen({
 
     createNewGame();
   }, []);
+
+  useEffect(() => {
+    if (currentRoom) {
+      navigation.replace("lobby");
+    }
+  }, [currentRoom]);
 
   return (
     <View style={styles.container}>

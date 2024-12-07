@@ -11,7 +11,7 @@ import { Image } from "expo-image";
 import { Player } from "@/types/GameTypes";
 
 export default function ResultScreen() {
-  const { players, currentRoom } = useColyseusStore();
+  const { players } = useColyseusStore();
   const [confetti, setConfetti] = useState(false);
   const [darken, setDarken] = useState(false);
   const [winner, setWinner] = useState<Player>(players[0]);
@@ -34,7 +34,6 @@ export default function ResultScreen() {
   });
 
   useEffect(() => {
-    // Find winners
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
     setWinner(sortedPlayers[0]);
     setSecondPlace(sortedPlayers[1]);
