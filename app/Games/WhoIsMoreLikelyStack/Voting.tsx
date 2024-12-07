@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     paddingVertical: 120,
   },
   defaultText: {
-    fontSize: 36,
+    fontSize: 30,
     textAlign: "center",
   },
   questionText: {
     color: "#fff",
-    fontSize: 60,
+    fontSize: 40,
     textAlign: "center",
   },
   buttonContainer: {
