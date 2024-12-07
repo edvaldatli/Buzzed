@@ -56,7 +56,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
 
   createRoom: async (playerName: string, image: string) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
+      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
     );
     set({ client });
 
@@ -132,7 +132,7 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
     avatarBase64: string
   ) => {
     const client = new Colyseus.Client(
-      process.env.WEBSOCKET_URL || "ws://192.168.50.230:2567"
+      process.env.WEBSOCKET_URL || "https://nl-ams-6cae0481.colyseus.cloud"
     );
     set({ client });
 
