@@ -47,7 +47,6 @@ export default function RootLayout() {
           component={QRCodeModalScreen}
           options={{
             headerShown: false,
-            gestureEnabled: false,
             presentation: "modal",
           }}
         />
@@ -107,7 +106,6 @@ export default function RootLayout() {
           component={GameSettingsScreen}
           options={{
             headerShown: false,
-            gestureEnabled: false,
             presentation: "modal",
           }}
         />

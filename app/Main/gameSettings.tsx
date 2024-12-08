@@ -35,7 +35,7 @@ export default function GameSettingsScreen({
       <BackgroundGradient style={styles.background} />
       <MotiView style={styles.innerContainer}>
         <PrimaryText>Game Settings</PrimaryText>
-        <View style={{ padding: 20 }}>
+        <View>
           <PrimaryText style={styles.contentText}>Max Rounds</PrimaryText>
           <Picker
             style={{ width: 100, height: 20, alignSelf: "center" }}

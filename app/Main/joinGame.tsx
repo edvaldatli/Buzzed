@@ -6,7 +6,7 @@ import ErrorButton from "@/components/errorButton";
 import { RootStackParamList } from "@/navigation/RootStackParams";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BarcodeScanningResult } from "expo-camera";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useColyseusStore } from "@/context/ColyseusContext";
 import { MotiView } from "moti";
 import BackgroundGradient from "@/components/backgroundGradient";
@@ -34,11 +34,9 @@ export default function JoinGameScreen({
     if (disabled || lastScanned == data.data) return;
     setLastScanned(data.data);
     setDisabled(true);
+    setLoading(true);
     try {
       await joinRoom(data.data, name, image!);
-      if (currentRoom) {
-        navigation.navigate("lobby");
-      }
     } catch (e) {
       console.log("Error joining room", e);
       Toast.show({
@@ -56,14 +54,16 @@ export default function JoinGameScreen({
     requestPermission();
   }
 
+  useEffect(() => {
+    if (currentRoom) {
+      navigation.replace("lobby");
+    }
+  }, [currentRoom]);
+
   if (loading) {
     return (
-      <View
-        className="flex h-full justify-center items-center p-12"
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <BackgroundGradient style={styles.background} />
-        <View />
         <View>
           <ActivityIndicator
             size={"large"}

@@ -19,13 +19,7 @@ export default function QRCodeModalScreen({
   return (
     <View style={styles.container}>
       <BackgroundGradient style={styles.background} />
-      <TouchableOpacity
-        onPress={() => navigation.pop()}
-        style={styles.closeButton}
-      >
-        <AntDesign name="closecircle" size={40} color="orange" />
-      </TouchableOpacity>
-      <PrimaryText tlw="text-10xl text-center">Scan me</PrimaryText>
+      <PrimaryText>Scan me</PrimaryText>
       <QrCode data={value} />
     </View>
   );

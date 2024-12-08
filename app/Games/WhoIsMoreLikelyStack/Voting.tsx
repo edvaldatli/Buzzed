@@ -39,6 +39,7 @@ export default function VotingScreen() {
   useEffect(() => {
     const listen = () => {
       currentRoom?.onMessage("showingResults", (winnerId: string) => {
+        console.log("showingResults", winnerId);
         if (winnerId) {
           const winner = currentRoom?.state.players.find(
             (player: Player) => player.id === winnerId
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     color: "#fff",
-    fontSize: 40,
+    fontSize: 34,
     textAlign: "center",
   },
   buttonContainer: {

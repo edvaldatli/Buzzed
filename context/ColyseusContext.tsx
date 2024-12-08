@@ -113,7 +113,6 @@ export const useColyseusStore = create<ColyseusState>((set, get) => ({
       });
 
       room.onLeave(() => {
-        get().reconnect();
         set({
           connected: false,
           currentRoom: null,
